@@ -13,6 +13,7 @@ namespace O{
     class odom{
 
         public:
+        void setStartPos(double x, double y, double angle);
 
     };
 }

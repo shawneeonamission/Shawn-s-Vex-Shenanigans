@@ -26,6 +26,8 @@ odom pos;
 
 void pre_auton(void) {
 
+  pos.setStartPos(0,0,0);
+  
   task odom(odomCalculations);
 
   // All activities that occur before the competition starts

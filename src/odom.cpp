@@ -53,6 +53,15 @@ double localHypotnuseAngle;
 
 bool odomEnable = true;
 
+//Function to easily set the odometry starting position amd angle
+void odom::setStartPos(double x, double y, double angle){
+    startX = x;
+    startY = y;
+    startAngle = angle;
+
+}
+
+
 //Task to perform odometry calculations
 int odomCalculations(){
     //Infinte loop
