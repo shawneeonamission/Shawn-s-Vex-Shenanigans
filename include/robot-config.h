@@ -16,6 +16,8 @@ extern motor LD4;
 extern motor_group LDrive;
 
 extern inertial Gyro;
+extern rotation parallelTrackingWheel;
+extern rotation perpendicularTrackingWheel;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

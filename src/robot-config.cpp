@@ -18,3 +18,5 @@ motor LD4 = motor(PORT8,ratio18_1);
 motor_group LDrive(LD1,LD2,LD3,LD4);
 
 inertial Gyro = inertial(PORT9,left);
+rotation parallelTrackingWheel = rotation(PORT10);
+rotation perpendicularTrackingWheel = rotation(PORT11);
