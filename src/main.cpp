@@ -8,25 +8,25 @@
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
+#include "drive.h"
+#include "odom.h"
+#include <iostream>
+#include <array>
+#include <thread>
 
+using namespace D;
+using namespace O;
 using namespace vex;
 
 // A global instance of competition
 competition Competition;
 
-// define your global instances of motors and other devices here
-
-/*---------------------------------------------------------------------------*/
-/*                          Pre-Autonomous Functions                         */
-/*                                                                           */
-/*  You may want to perform some actions before the competition starts.      */
-/*  Do them in the following function.  You must return from this function   */
-/*  or the autonomous and usercontrol tasks will not be started.  This       */
-/*  function is only called once after the V5 has been powered on and        */
-/*  not every time that the robot is disabled.                               */
-/*---------------------------------------------------------------------------*/
+drive base;
+odom pos;
 
 void pre_auton(void) {
+
+  task odom(odomCalculations);
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
@@ -60,6 +60,7 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
+  task driver(Drive);
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
