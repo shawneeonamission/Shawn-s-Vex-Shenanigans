@@ -6,7 +6,7 @@
 #include <iostream>
 
 //declare the namespace you created
-using namespace D;
+using namespace S;
 //also include namespace vex
 using namespace vex;
 

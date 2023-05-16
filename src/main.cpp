@@ -10,12 +10,12 @@
 #include "vex.h"
 #include "drive.h"
 #include "odom.h"
+#include "intake.h"
 #include <iostream>
 #include <array>
 #include <thread>
 
-using namespace D;
-using namespace O;
+using namespace S;
 using namespace vex;
 
 // A global instance of competition
@@ -23,11 +23,12 @@ competition Competition;
 
 drive base;
 odom pos;
+feeder intake;
 
 void pre_auton(void) {
 
   pos.setStartPos(0,0,0);
-  
+
   task odom(odomCalculations);
 
   // All activities that occur before the competition starts

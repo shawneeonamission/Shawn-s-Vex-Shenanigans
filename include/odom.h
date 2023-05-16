@@ -8,7 +8,7 @@ extern double finalPosY;
 extern double finalAngle;
 extern int odomCalculations();
 
-namespace O{
+namespace S{
 
     class odom{
 

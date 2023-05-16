@@ -259,7 +259,7 @@ int autonSelect() {
                 //Initial Text
                 Brain.Screen.setFillColor(vex::color::black);
                 Brain.Screen.setPenColor(vex::color::white);
-                Brain.Screen.printAt(110, 20, "Pre-Autonomous Chooser v1.0"); 
+                Brain.Screen.printAt(110, 20, "Pre-Autonomous Chooser v2.0"); 
                 //"Select Autonomous Mode" and selected mode display
                 Brain.Screen.printAt(130, 50, "Select Autonomous Mode");
                 Brain.Screen.setFillColor(vex::color::white);
@@ -327,13 +327,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(185, 100, autonModes[count]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 count = 10;
@@ -353,13 +349,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(195, 100, autonModes[count]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 count = 5;
@@ -383,13 +375,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(185, 100, autonModes[count]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 count--;
@@ -413,13 +401,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(200, 100, autonModes[count]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 count--;
@@ -443,13 +427,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(180, 100, autonModes[count]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 count--;
@@ -473,13 +453,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(180, 100, autonModes[count]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 count--;
@@ -503,13 +479,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(190, 100, autonModes[count]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 count--;
@@ -534,7 +506,7 @@ int autonSelect() {
                     }//end auton switch   
                 }//end auton while
             break;
-            //Driver chooser menu
+            //Side chooser menu
             case 1:
                 //Clear screen
                 Brain.Screen.clearScreen(vex::color::black);
@@ -543,7 +515,7 @@ int autonSelect() {
                 Brain.Screen.setPenColor(vex::color::white);
                 Brain.Screen.printAt(110, 20, "Pre-Autonomous Chooser v1.0"); 
                 //"Select Driver" and selected mode display
-                Brain.Screen.printAt(170, 50, "Select Side");
+                Brain.Screen.printAt(170, 50, "Select Offensive Zone");
                 Brain.Screen.setFillColor(vex::color::white);
                 Brain.Screen.drawRectangle(130, 70, 220, 50);
                 //Set pen to black color
@@ -605,13 +577,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(160, 100, drivers[driverCount]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 driverCount = 2;
@@ -631,13 +599,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(160, 100, drivers[driverCount]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 driverCount--;
@@ -730,13 +694,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(180, 100, augmentModes[augmentCount]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Yes" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 augmentCount = 1;
@@ -756,13 +716,9 @@ int autonSelect() {
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
                             Brain.Screen.printAt(225, 100, augmentModes[augmentCount]);
-                            /*
-                            These two lines of code seem counterintuitive,
-                            but they are an effective way to wait for a press
-                            and wait for a release.
-                            */
-                            while(!Brain.Screen.pressing()){}//Wait for press
-                            while(Brain.Screen.pressing()){}//Wait for release
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Yes" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
                                 augmentCount = 1;
@@ -908,8 +864,8 @@ int autonSelect() {
                         but they are an effective way to wait for a press
                         and wait for a release.
                     */
-                    while(!Brain.Screen.pressing()){}//Wait for press
-                    while(Brain.Screen.pressing()){}//Wait for release
+                    waitUntil(Brain.Screen.pressing());
+                    waitUntil(!Brain.Screen.pressing());//Wait for release
                     //"Confirm" box
                     if(Brain.Screen.xPosition() > 360 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 60 && Brain.Screen.yPosition() < 110){
                         reviewDone = true;
@@ -1009,4 +965,5 @@ int autonSelect() {
     }//end infinite loop
     task auauto(TestingMenu);
     return(0);
-}//end main
+    //end main
+}

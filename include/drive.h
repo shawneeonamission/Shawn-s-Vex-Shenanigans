@@ -5,7 +5,7 @@
 extern int Drive();
 
 //define a namespace
-namespace D{
+namespace S{
 
   //define a class
   class drive{
@@ -27,7 +27,7 @@ namespace D{
 
 }
 
-extern D::drive base;
+extern S::drive base;
 //this finished the #ifndef condition
 //put all code between these 
 #endif

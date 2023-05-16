@@ -19,6 +19,9 @@ extern inertial Gyro;
 extern rotation parallelTrackingWheel;
 extern rotation perpendicularTrackingWheel;
 
+extern motor lIntake;
+extern motor rIntake;
+
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *

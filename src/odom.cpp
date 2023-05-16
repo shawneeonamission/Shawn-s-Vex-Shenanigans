@@ -4,7 +4,7 @@
 #include <iostream>
 
 //declare the namespace you created
-using namespace O;
+using namespace S;
 //also include namespace vex
 using namespace vex;
 

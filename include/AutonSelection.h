@@ -29,7 +29,7 @@ extern int testing;
 
 
 //define a namespace
-namespace N{
+namespace S{
 
   //define a class
   class AutonSelector{
