@@ -11,6 +11,7 @@
 #include "drive.h"
 #include "odom.h"
 #include "intake.h"
+#include "VexLink.h"
 #include <iostream>
 #include <array>
 #include <thread>
@@ -25,11 +26,15 @@ drive base;
 odom pos;
 feeder intake;
 
+//Vex Link Robot Status
+linkType status = linkType::manager;
+
 void pre_auton(void) {
 
   pos.setStartPos(0,0,0);
 
   task odom(odomCalculations);
+  task startLink(vexLink);
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...

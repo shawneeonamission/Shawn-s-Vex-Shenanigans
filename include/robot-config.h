@@ -22,6 +22,8 @@ extern rotation perpendicularTrackingWheel;
 extern motor lIntake;
 extern motor rIntake;
 
+extern serial_link linkA;
+
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *
