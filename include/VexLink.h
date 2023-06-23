@@ -4,6 +4,12 @@
 
 extern linkType status;
 extern int vexLink();
+extern double targetX;
+extern double targetY;
+extern bool messageRecieved;
+extern bool sendMessage;
+extern std::string messageToSend;
+extern std::string recievedMessage;
 
 namespace S{
 
@@ -13,5 +19,5 @@ namespace S{
             void send(std::string message);
     };
 }
-
+extern S::link Link;
 #endif

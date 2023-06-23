@@ -25,6 +25,7 @@ competition Competition;
 drive base;
 odom pos;
 feeder intake;
+S::link Link;
 
 //Vex Link Robot Status
 linkType status = linkType::manager;

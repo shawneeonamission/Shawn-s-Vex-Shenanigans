@@ -8,22 +8,22 @@
 using namespace S;
 //also include namespace vex
 using namespace vex;
-
+\
 double targetX;
 double targetY;
 bool messageRecieved;
+bool sendMessage;
+std::string messageToSend;
 std::string recievedMessage;
 
 //Function that sends coordinates to the other robot
 void link::send(double x, double y){
-    uint8_t data[5];
-    data[0] = uint8_t("C");
-    int wholeX = int(finalPosX);
-      int deciX = int((finalPosX - wholeX)*100);
-      int wholeY = int(finalPosY);
-      int deciY = int((finalPosY - wholeY)*100);
+    int wholeX = int(x);
+      int deciX = int((x - wholeX)*100);
+      int wholeY = int(y);
+      int deciY = int((y - wholeY)*100);
 
-      uint8_t data[] = {uint8_t(wholeX), uint8_t(deciX),uint8_t(wholeY),uint8_t(deciY)};
+      uint8_t data[] = {uint8_t("C"), uint8_t(wholeX), uint8_t(deciX),uint8_t(wholeY),uint8_t(deciY)};
      
     linkA.send(data,sizeof(data));
 }
@@ -58,14 +58,33 @@ void rx_handler( uint8_t *buffer, int32_t length ) {
 int vexLink(){
     if(status == linkType::manager){
         serial_link linkA(PORT14,"CYCLN3_Cyclone_Robotics",linkType::manager);
-    }
+    }   
     else if(status == linkType::worker){
         serial_link linkA(PORT14,"CYCLN3_Cyclone_Robotics",linkType::worker);
     }
 
     while(true){
+        Brain.Screen.printAt( 10, 50, true, "Link: %s", linkA.isLinked() ? "ok" : "--" );
         if(linkA.isLinked()){
-
+            if(status == linkType::manager){
+                if(linkA.isReceiving()){
+                    linkA.received(rx_handler);
+                }
+                if(messageToSend.length() > 0){
+                    sendMessage = true;
+                    Link.send(messageToSend);
+                }
+                else{
+                    Link.send(finalPosX,finalPosY);
+                }
+            }
+            else if(status == linkType::worker){
+                if(messageToSend.length() > 0){
+                    sendMessage = true;
+                    Link.send(messageToSend);
+                }
+                linkA.received(rx_handler);
+            }
         }
         wait(5,msec);
     }
