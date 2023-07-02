@@ -931,7 +931,7 @@ int autonSelect() {
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "Side");
+                Brain.Screen.printAt(30, 110, "OZ");
                 //Augmentation Sidemenu
                 if(augmentDone){
                     Brain.Screen.setFillColor(vex::color::green);
