@@ -2,6 +2,8 @@
 #ifndef __VEXLINK_H__
 #define __VEXLINK_H__
 
+#include <string>
+
 extern linkType status;
 extern int vexLink();
 extern double targetX;
@@ -15,6 +17,7 @@ namespace S{
 
     class link{
         public:
+          
             void send(double x, double y);
             void send(std::string message);
     };

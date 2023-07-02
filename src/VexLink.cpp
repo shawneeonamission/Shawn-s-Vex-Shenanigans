@@ -3,18 +3,26 @@
 #include "VexLink.h"
 #include "odom.h"
 #include <iostream>
+#include <string>
 
 //declare the namespace you created
 using namespace S;
 //also include namespace vex
 using namespace vex;
-\
+
 double targetX;
 double targetY;
 bool messageRecieved;
 bool sendMessage;
-std::string messageToSend;
-std::string recievedMessage;
+std::string messageToSend = "";
+std::string recievedMessage = "";
+
+serial_link linkA(PORT14,"CYCLN3_Cyclone_Robotics",status);
+ 
+
+
+
+
 
 //Function that sends coordinates to the other robot
 void link::send(double x, double y){
@@ -23,7 +31,7 @@ void link::send(double x, double y){
       int wholeY = int(y);
       int deciY = int((y - wholeY)*100);
 
-      uint8_t data[] = {uint8_t("C"), uint8_t(wholeX), uint8_t(deciX),uint8_t(wholeY),uint8_t(deciY)};
+      uint8_t data[] = {uint8_t('C'), uint8_t(wholeX), uint8_t(deciX),uint8_t(wholeY),uint8_t(deciY)};
      
     linkA.send(data,sizeof(data));
 }
@@ -31,7 +39,7 @@ void link::send(double x, double y){
 //Function that sends a string to the other robot
 void link::send(std::string message){
     uint8_t data[message.length() + 1];
-    data[0] = uint8_t("S");
+    data[0] = uint8_t('S');
     for(int i = 1; i < message.length() + 1; i++){
         data[i] = uint8_t(message[i-1]);
     }
@@ -40,29 +48,24 @@ void link::send(std::string message){
 
 
 void rx_handler( uint8_t *buffer, int32_t length ) {
-    if(buffer[0] == uint8_t("C")){
+    if(buffer[0] == uint8_t('C')){
         targetX = double(buffer[1]) + (double(buffer[2])/100);
         targetY = double(buffer[3]) + (double(buffer[4])/100);
         Brain.Screen.printAt(10,110,true,"target value (%.2f.,%.2f)", targetX, targetY );
     }
-    if(buffer[0] == uint8_t("S")){
+    if(buffer[0] == uint8_t('S')){
         messageRecieved = true;
         for(int i = 0; i < length; i++){
             recievedMessage += buffer[i + 1];
         }
+        
     }
 }
 
 
 
 int vexLink(){
-    if(status == linkType::manager){
-        serial_link linkA(PORT14,"CYCLN3_Cyclone_Robotics",linkType::manager);
-    }   
-    else if(status == linkType::worker){
-        serial_link linkA(PORT14,"CYCLN3_Cyclone_Robotics",linkType::worker);
-    }
-
+    
     while(true){
         Brain.Screen.printAt( 10, 50, true, "Link: %s", linkA.isLinked() ? "ok" : "--" );
         if(linkA.isLinked()){

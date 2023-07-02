@@ -12,6 +12,7 @@
 #include "odom.h"
 #include "intake.h"
 #include "VexLink.h"
+#include "AutonSelection.h"
 #include <iostream>
 #include <array>
 #include <thread>
@@ -30,12 +31,25 @@ S::link Link;
 //Vex Link Robot Status
 linkType status = linkType::manager;
 
+//variables
+bool testing = false;
+
+int auton = 0;
+
+short augmentCount = 0;
+
+int rob = 0;
+
 void pre_auton(void) {
 
   pos.setStartPos(0,0,0);
 
   task odom(odomCalculations);
   task startLink(vexLink);
+
+  if((Competition.isFieldControl() || Competition.isCompetitionSwitch()) && !(Competition.isEnabled())){
+    task autoselect(autonSelect);
+  }
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...

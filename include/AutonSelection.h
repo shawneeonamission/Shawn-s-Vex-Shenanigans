@@ -9,7 +9,7 @@ extern int auton;
 
 extern int autonSelect();
 
-extern int odom_refresh();
+extern int odomCalculations();
 
 extern int rob;
 
@@ -21,11 +21,11 @@ extern short augmentCount;
 
 extern int offset;
 
-extern double Start_X;
+extern double startX;
 
-extern double Start_Y;
+extern double startY;
 
-extern int testing;
+extern bool testing;
 
 
 //define a namespace

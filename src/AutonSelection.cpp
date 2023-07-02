@@ -82,10 +82,9 @@ intro() {
 }
 
 
-int TestingMenu()
-{
+int TestingMenu(){
 
-   if(testing == 0){
+   if(testing == false){
   
     }
   Brain.Screen.clearScreen(black);
@@ -128,25 +127,25 @@ Brain.Screen.setPenColor(blue);
       if(auton == 2)
       {
         
-        Start_X = 88.5;
-        Start_Y = 16.5;
+        startX = 88.5;
+        startY = 16.5;
 
         Gyro.setRotation(90,deg);
       }
       else if(auton == 1 || auton == 3 || auton == 4)
       {
-        Start_X = 17.5;
-        Start_Y = 102;
+        startX = 17.5;
+        startY = 102;
       }
       
       if(auton >= 5)
       {
-        Start_X = 10;
-        Start_Y = 70;
+        startX = 10;
+        startY = 70;
         Gyro.setRotation(24,deg);
       }
       
-        task asijasf(odom_refresh);
+        task asijasf(odomCalculations);
         
       
       Brain.Screen.setPenColor(white);
