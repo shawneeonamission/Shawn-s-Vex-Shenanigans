@@ -12,6 +12,7 @@
 #include "odom.h"
 #include "intake.h"
 #include "VexLink.h"
+#include "shooter.h"
 #include "AutonSelection.h"
 #include <iostream>
 #include <array>
@@ -27,6 +28,7 @@ drive base;
 odom pos;
 feeder intake;
 S::link Link;
+shooter Shooter;
 
 //Vex Link Robot Status
 linkType status = linkType::manager;
