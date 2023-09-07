@@ -751,7 +751,7 @@ int autonSelect() {
                 //Information box headers
                 Brain.Screen.setFillColor(vex::color::black);
                 Brain.Screen.printAt(155, 90, "Autonomous Mode:");
-                Brain.Screen.printAt(200, 140, "Side:");
+                Brain.Screen.printAt(200, 140, "OZ:");
                 Brain.Screen.printAt(180, 190, "Augment AM:");
                 //Information boxes
                 Brain.Screen.setFillColor(vex::color::white);
@@ -835,7 +835,7 @@ int autonSelect() {
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "Side");
+                Brain.Screen.printAt(30, 110, "OZ");
                 //Augmentation Sidemenu
                 if(augmentDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -895,7 +895,7 @@ int autonSelect() {
                 //Information box headers
                 Brain.Screen.setFillColor(vex::color::black);
                 Brain.Screen.printAt(155, 70, "Autonomous Mode:");
-                Brain.Screen.printAt(200, 120, "Side:");
+                Brain.Screen.printAt(200, 120, "OZ:");
                 Brain.Screen.printAt(180, 170, "Augment DC:");
                 //Information boxes
                 Brain.Screen.setFillColor(vex::color::white);
