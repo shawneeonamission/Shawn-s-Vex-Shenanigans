@@ -4,12 +4,18 @@
 #include "odom.h"
 #include "FrontVision.h"
 #include <iostream>
+#include "cmath"
 
 //declare the namespace you created
 using namespace S;
 //also include namespace vex
 using namespace vex;
 
+double joystickCurveValue = 0;
+
+void drive::setJoystickCurve(double curveValue){
+    joystickCurveValue = curveValue;
+}
 
 //Function to stop the motors
 void drive::stop(){
@@ -59,6 +65,10 @@ void drive::spin(float leftpower,float rightpower){
     LD2.spin(directionType::fwd,leftpower,pct);
     LD3.spin(directionType::fwd,leftpower,pct);
     LD4.spin(directionType::fwd,leftpower,pct); 
+}
+
+double drive::joystickCurve(double joystickValue){
+    return exp(((abs(joystickValue) - 100) * joystickCurveValue) / 1000) * joystickValue;
 }
 
 
@@ -197,9 +207,7 @@ void drive::moveToPoint(double x, double y, double angle, double maxPwr){
 //Task to run the drive and associated mechanisms
 int Drive(){
     while(true){
-        
-        base.spin(Controller1.Axis3.position(),Controller1.Axis2.position());
-
+        base.spin(base.joystickCurve(Controller1.Axis3.position()),base.joystickCurve(Controller1.Axis2.position()));
         wait(10,msec);
     }
 }
