@@ -14,9 +14,9 @@ using namespace vex;
 
 double joystickCurveValue = 0;
 
-double jRight;
+double lForward;
 
-double jLeft;
+double rForward;
 
 double lTurn;
 
@@ -219,24 +219,24 @@ int Drive(){
     base.setJoystickCurve(0);
 
     while(true){
-        jRight = base.joystickCurve(Controller1.Axis2.position());
-        jLeft = base.joystickCurve(Controller1.Axis3.position());
+        lForward = base.joystickCurve(Controller1.Axis2.position());
+        rForward = base.joystickCurve(Controller1.Axis3.position());
         lTurn = base.joystickCurve(Controller1.Axis4.position());
         rTurn = base.joystickCurve(Controller1.Axis1.position());
         if(driverCount == 0){
-            base.spin(jLeft + lTurn, jLeft - lTurn);
+            base.spin(lForward + lTurn, lForward - lTurn);
         }
         else if(driverCount == 1){
-            base.spin(jLeft,jRight);
+            base.spin(lForward,rForward);
         }
         else if(driverCount == 2){
-            base.spin(jRight + rTurn, jRight - rTurn);
+            base.spin(rForward + rTurn, rForward - rTurn);
         }
         else if(driverCount == 3){
-            base.spin(jLeft + rTurn, jLeft - rTurn);
+            base.spin(lForward + rTurn, lForward - rTurn);
         }
         else if(driverCount == 4){
-            base.spin(jRight + lTurn, jRight - lTurn);
+            base.spin(rForward + lTurn, rForward - lTurn);
         }
         wait(10,msec);
     }
