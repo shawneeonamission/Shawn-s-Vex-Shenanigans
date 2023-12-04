@@ -38,7 +38,7 @@ bool testing = false;
 
 int auton = 0;
 
-short augmentCount = 0;
+short sideCount = 0;
 
 int rob = 0;
 
@@ -68,9 +68,58 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  // ..........................................................................
-  // Insert autonomous user code here.
-  // ..........................................................................
+  //Auton 1, Left Side
+  if (auton == 1){
+
+  }
+  //Auton 2, Left Side
+  if (auton == 2){
+    
+  }
+  //Auton 3, Left Side
+  if (auton == 3){
+
+  }
+  //Auton 4, Left Side
+  if (auton == 4){
+    
+  }
+  //Auton 5, Left Side
+  if (auton == 5){
+
+  }
+  //Auton 6, Left Side
+  if (auton == 6){
+    
+  }
+  //Secret, Do Nothing Right Side
+  if (auton == 7){
+
+  }
+  //Auton 1, Right Side
+  if (auton == 8){
+    
+  }
+   //Auton 2, Right Side
+  if (auton == 9){
+
+  }
+   //Auton 3, Right Side
+  if (auton == 10){
+    
+  }
+   //Auton 4, Right Side
+  if (auton == 11){
+
+  }
+   //Auton 5, Right Side
+  if (auton == 12){
+    
+  }
+    //Auton 6, Right Side
+  if (auton == 12){
+    
+  }
 }
 
 /*---------------------------------------------------------------------------*/

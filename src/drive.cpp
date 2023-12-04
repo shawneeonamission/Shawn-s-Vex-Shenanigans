@@ -2,6 +2,7 @@
 #include "vex.h"
 #include "drive.h"
 #include "odom.h"
+#include "AutonSelection.h"
 #include "FrontVision.h"
 #include <iostream>
 #include "cmath"
@@ -12,6 +13,14 @@ using namespace S;
 using namespace vex;
 
 double joystickCurveValue = 0;
+
+double jRight;
+
+double jLeft;
+
+double lTurn;
+
+double rTurn;
 
 void drive::setJoystickCurve(double curveValue){
     joystickCurveValue = curveValue;
@@ -103,7 +112,7 @@ void drive::turn(double angle, double maxPwr){
     D = (P - lastError)/10;
     lastError = P;
     //calculate drive power
-    float total = P*kP + I*kI - D*kD;
+    float total = P*kP + I*kI + D*kD;
 
     //setting power value
     if(fabs(total) > maxPwr){
@@ -206,8 +215,29 @@ void drive::moveToPoint(double x, double y, double angle, double maxPwr){
 
 //Task to run the drive and associated mechanisms
 int Drive(){
+
+    base.setJoystickCurve(0);
+
     while(true){
-        base.spin(base.joystickCurve(Controller1.Axis3.position()),base.joystickCurve(Controller1.Axis2.position()));
+        jRight = base.joystickCurve(Controller1.Axis2.position());
+        jLeft = base.joystickCurve(Controller1.Axis3.position());
+        lTurn = base.joystickCurve(Controller1.Axis4.position());
+        rTurn = base.joystickCurve(Controller1.Axis1.position());
+        if(driverCount == 0){
+            base.spin(jLeft + lTurn, jLeft - lTurn);
+        }
+        else if(driverCount == 1){
+            base.spin(jLeft,jRight);
+        }
+        else if(driverCount == 2){
+            base.spin(jRight + rTurn, jRight - rTurn);
+        }
+        else if(driverCount == 3){
+            base.spin(jLeft + rTurn, jLeft - rTurn);
+        }
+        else if(driverCount == 4){
+            base.spin(jRight + lTurn, jRight - lTurn);
+        }
         wait(10,msec);
     }
 }

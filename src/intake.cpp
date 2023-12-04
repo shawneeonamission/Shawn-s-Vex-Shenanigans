@@ -10,17 +10,15 @@ using namespace vex;
 
 void feeder::in(float prct){
   intoggle = 1;
-  lIntake.spin(fwd,prct,pct);
-  rIntake.spin(fwd,prct,pct);
+  wIntake.spin(fwd,prct,pct);
 }
 void feeder::out(float prct){
   intoggle = 2;
-  lIntake.spin(reverse,prct,pct);
-  rIntake.spin(reverse,prct,pct);
+  wIntake.spin(reverse,prct,pct);
 }
 void feeder::stop(){
-    lIntake.stop();
-    rIntake.stop();
+    intoggle = 0;
+    wIntake.stop();
 }
 
 int intakeControl(){

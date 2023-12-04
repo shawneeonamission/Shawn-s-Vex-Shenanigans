@@ -17,7 +17,7 @@ extern void GyroCalibrate();
 
 extern int TestingMenu();
 
-extern short augmentCount;
+extern short sideCount;
 
 extern int offset;
 
@@ -26,6 +26,8 @@ extern double startX;
 extern double startY;
 
 extern bool testing;
+
+extern short driverCount;
 
 
 //define a namespace

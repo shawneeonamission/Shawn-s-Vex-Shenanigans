@@ -28,19 +28,19 @@ Brain.Screen.printAt(25,50,"Inertial");
 int menuCount;
 //Menu Conditions
 bool autonDone;
+bool sideDone;
 bool driverDone;
-bool augmentDone;
 bool reviewDone;
 //Count for autonomous chooser
 short count;
-//Count for driver chooser
+//Count for side chooser
+short sideCount;
+//Boolean for driver chooser
 short driverCount;
-//Boolean for augment chooser
-
 //String arrays for display text
 const char *autonModes[7];
-const char *drivers[2];
-const char *augmentModes[2];
+const char *sides[3];
+const char *drivers[5];
 
 uint8_t   imageBuffer[ 240 * (128 * 1024) ];
 uint32_t  imageBufferLen[240];
@@ -59,8 +59,7 @@ introInit() {
 }
 
 
-void
-intro() {
+void intro() {
   int   file = 0;
 
   introInit();
@@ -84,6 +83,8 @@ intro() {
 
 int TestingMenu(){
 
+    auton = count + 7 * sideCount;
+
    if(testing == false){
   
     }
@@ -106,8 +107,8 @@ Brain.Screen.setPenColor(blue);
   Brain.Screen.printAt(410,210,"Blue");
   Brain.Screen.setPenColor(white);
   Brain.Screen.printAt(300,20,"count = %d", count);
-  Brain.Screen.printAt(300,40,"Driver = %d", driverCount);
-  Brain.Screen.printAt(300,60,"Augment = %d", augmentCount);
+  Brain.Screen.printAt(300,40,"side = %d", sideCount);
+  Brain.Screen.printAt(300,60,"driver = %d", driverCount);
   Brain.Screen.printAt(300,80,"Auton = %d", auton);
   while(true)
   {
@@ -216,33 +217,37 @@ int autonSelect() {
         when shifting through the choices.1
     */
     autonModes[0] = "Do Nothing";
-    autonModes[1] = "Do Nothing";
+    autonModes[1] = "Skills";
     autonModes[2] = "Do Nothing";
     autonModes[3] = "Do Nothing";
     autonModes[4] = "Do Nothing";
     autonModes[5] = "Do Nothing";
     autonModes[6] = "Do Nothing";
 
-    drivers[0] = "Red";
-    drivers[1] = "Blue";
-    augmentModes[0] = "No <Default>";
-    augmentModes[1] = "Yes";
+    sides[0] = "Left";
+    sides[1] = "Right";
+
+    drivers[0] = "Default(Left Arcade)";
+    drivers[1] = "driver1(Tank)";
+    drivers[2] = "driver2(Right Arcade)";
+    drivers[3] = "driver2(Left Split)";
+    drivers[4] = "driver2(Right Split)";
     //--------------------------------
     //intro
     intro();
     //Initialize menu variables
     menuCount = 0;
     autonDone = false;
+    sideDone = false;
     driverDone = false;
-    augmentDone = false;
     reviewDone = false; 
     /* Sub-Menu Variable Initialization */
     //Autonomous Chooser
     count = 1;
-    //Driver Chooser
+    //side Chooser
+    sideCount = 0;
+    //driver Chooser
     driverCount = 0;
-    //Augment Chooser
-    augmentCount = 0;
     //Run infinite loop
     while(true){
         switch(menuCount){
@@ -264,6 +269,7 @@ int autonSelect() {
                 Brain.Screen.setFillColor(vex::color::white);
                 Brain.Screen.drawRectangle(130, 70, 220, 50);
                 //"Confirm" button
+                Brain.Screen.setPenColor(vex::color::black);
                 Brain.Screen.setFillColor(vex::color::green);
                 Brain.Screen.drawRectangle(380, 40, 80, 50);
                 Brain.Screen.setPenColor(vex::color::black);
@@ -292,22 +298,22 @@ int autonSelect() {
                 //Indicate current menu by showing a green square
                 Brain.Screen.setFillColor(vex::color::green);
                 Brain.Screen.drawRectangle(10, 35, 15, 15);
-                //Driver Sidemenu
-                if(driverDone){
+                //side Sidemenu
+                if(sideDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "Side");
-                //Augmentation Sidemenu
-                if(augmentDone){
+                Brain.Screen.printAt(30, 110, "side");
+                //driver Sidemenu
+                if(driverDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 135, 100, 40);
-                Brain.Screen.printAt(25, 160, "Augment");
+                Brain.Screen.printAt(25, 160, "driver");
                 //Review Sidemenu
                 if(reviewDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -513,7 +519,7 @@ int autonSelect() {
                 Brain.Screen.setFillColor(vex::color::black);
                 Brain.Screen.setPenColor(vex::color::white);
                 Brain.Screen.printAt(110, 20, "Pre-Autonomous Chooser v1.0"); 
-                //"Select Driver" and selected mode display
+                //"Select side" and selected mode display
                 Brain.Screen.printAt(170, 50, "Select Offensive Zone");
                 Brain.Screen.setFillColor(vex::color::white);
                 Brain.Screen.drawRectangle(130, 70, 220, 50);
@@ -540,25 +546,138 @@ int autonSelect() {
                 }
                 Brain.Screen.drawRectangle(10, 35, 100, 40);
                 Brain.Screen.printAt(35, 60, "Auton");
-                //Driver Sidemenu
-                if(driverDone){
+                //side Sidemenu
+                if(sideDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "Side");
+                Brain.Screen.printAt(30, 110, "side");
                 //Indicate current menu by showing a green square
                 Brain.Screen.setFillColor(vex::color::green);
                 Brain.Screen.drawRectangle(10, 85, 15, 15);
-                //Augmentation Sidemenu
-                if(augmentDone){
+                //driver Sidemenu
+                if(driverDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 135, 100, 40);
-                Brain.Screen.printAt(25, 160, "Augment");
+                Brain.Screen.printAt(25, 160, "driver");
+                //Review Sidemenu
+                if(reviewDone){
+                    Brain.Screen.setFillColor(vex::color::green);
+                }else{
+                    Brain.Screen.setFillColor(vex::color::orange);
+                }
+                Brain.Screen.drawRectangle(10, 185, 100, 40);
+                Brain.Screen.printAt(27, 210, "Review");
+                //Set default text color
+                Brain.Screen.setFillColor(vex::color::white);
+                while(!sideDone){
+                    switch(sideCount){
+                        case 0:
+                            //Clear out previous text in info box
+                            Brain.Screen.drawRectangle(130, 70, 220, 50);
+                            //Print out text
+                            Brain.Screen.printAt(160, 100, sides[sideCount]);
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
+                            //"Previous" box
+                            if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
+                                sideCount = 2;
+                            }
+                            //"Next" box
+                            else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
+                                sideCount++;
+                            }
+                            //"Confirm" box
+                            if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
+                                sideDone = true;
+                                menuCount = 2;
+                            }
+                        break;
+                        case 1:
+                            //Clear out previous text in info box
+                            Brain.Screen.drawRectangle(130, 70, 220, 50);
+                            //Print out text
+                            Brain.Screen.printAt(160, 100, sides[sideCount]);
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
+                            //"Previous" box
+                            if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
+                                sideCount--;
+                            }
+                            //"Next" box
+                            else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
+                                sideCount++;
+                            }
+                            //"Confirm" box
+                            if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
+                                sideDone = true;
+                                menuCount = 2;
+                            }
+                        break;
+                    }
+                }
+            break;
+            //driver chooser menu
+            case 2:
+                //Clear screen
+                Brain.Screen.clearScreen(vex::color::black);
+                //Initial Text
+                Brain.Screen.setFillColor(vex::color::black);
+                Brain.Screen.setPenColor(vex::color::white);
+                Brain.Screen.printAt(110, 20, "Pre-Autonomous Chooser v1.0"); 
+                //"side side Control?" and selected mode display
+                Brain.Screen.printAt(130, 50, "which driver?");
+                Brain.Screen.setFillColor(vex::color::white);
+                Brain.Screen.drawRectangle(130, 70, 220, 50);
+                //Set pen to black color
+                Brain.Screen.setPenColor(vex::color::black);
+                //"Confirm" button
+                Brain.Screen.setFillColor(vex::color::green);
+                Brain.Screen.drawRectangle(380, 40, 80, 50);
+                Brain.Screen.setPenColor(vex::color::black);
+                Brain.Screen.printAt(385, 70, "Confirm");
+                //"Previous" button
+                Brain.Screen.setFillColor(vex::color::red);
+                Brain.Screen.drawRectangle(130, 140, 100, 62);
+                Brain.Screen.printAt(165, 175, "Default");
+                //"Next Button"
+                Brain.Screen.drawRectangle(250, 140, 100, 62);
+                Brain.Screen.printAt(290, 175, "Next");
+                //Side Menus
+                //Auton Selection Sidemenu
+                if(autonDone){
+                    Brain.Screen.setFillColor(vex::color::green);
+                }else{
+                    Brain.Screen.setFillColor(vex::color::orange);
+                }
+                Brain.Screen.drawRectangle(10, 35, 100, 40);
+                Brain.Screen.printAt(35, 60, "Auton");
+                //side Sidemenu
+                if(sideDone){
+                    Brain.Screen.setFillColor(vex::color::green);
+                }else{
+                    Brain.Screen.setFillColor(vex::color::orange);
+                }
+                Brain.Screen.drawRectangle(10, 85, 100, 40);
+                Brain.Screen.printAt(30, 110, "side");
+                //driver Sidemenu
+                if(driverDone){
+                    Brain.Screen.setFillColor(vex::color::green);
+                }else{
+                    Brain.Screen.setFillColor(vex::color::orange);
+                }
+                Brain.Screen.drawRectangle(10, 135, 100, 40);
+                Brain.Screen.printAt(25, 160, "driver");
+                //Indicate current menu by showing a green square
+                Brain.Screen.setFillColor(vex::color::green);
+                Brain.Screen.drawRectangle(10, 135, 15, 15);
                 //Review Sidemenu
                 if(reviewDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -575,13 +694,13 @@ int autonSelect() {
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(160, 100, drivers[driverCount]);
+                            Brain.Screen.printAt(180, 100, drivers[driverCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
-                            //"Previous" box
+                            //"Default" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                driverCount = 2;
+                                driverCount = 0;
                             }
                             //"Next" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
@@ -590,20 +709,20 @@ int autonSelect() {
                             //"Confirm" box
                             if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
                                 driverDone = true;
-                                menuCount = 2;
+                                menuCount = 3;
                             }
                         break;
                         case 1:
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(160, 100, drivers[driverCount]);
+                            Brain.Screen.printAt(225, 100, drivers[driverCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
-                            //"Previous" box
+                            //"Default" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                driverCount--;
+                                driverCount = 0;
                             }
                             //"Next" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
@@ -612,128 +731,77 @@ int autonSelect() {
                             //"Confirm" box
                             if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
                                 driverDone = true;
-                                menuCount = 2;
-                            }
-                        break;
-
-                        default:
-                            driverCount = 0;    
-                        break;
-                    }
-                }
-            break;
-            //Augment chooser menu
-            case 2:
-                //Clear screen
-                Brain.Screen.clearScreen(vex::color::black);
-                //Initial Text
-                Brain.Screen.setFillColor(vex::color::black);
-                Brain.Screen.setPenColor(vex::color::white);
-                Brain.Screen.printAt(110, 20, "Pre-Autonomous Chooser v1.0"); 
-                //"Augment Driver Control?" and selected mode display
-                Brain.Screen.printAt(130, 50, "Augment Autonomous Mode?");
-                Brain.Screen.setFillColor(vex::color::white);
-                Brain.Screen.drawRectangle(130, 70, 220, 50);
-                //Set pen to black color
-                Brain.Screen.setPenColor(vex::color::black);
-                //"Confirm" button
-                Brain.Screen.setFillColor(vex::color::green);
-                Brain.Screen.drawRectangle(380, 40, 80, 50);
-                Brain.Screen.setPenColor(vex::color::black);
-                Brain.Screen.printAt(385, 70, "Confirm");
-                //"Previous" button
-                Brain.Screen.setFillColor(vex::color::red);
-                Brain.Screen.drawRectangle(130, 140, 100, 62);
-                Brain.Screen.printAt(165, 175, "Yes");
-                //"Next Button"
-                Brain.Screen.drawRectangle(250, 140, 100, 62);
-                Brain.Screen.printAt(290, 175, "No");
-                //Side Menus
-                //Auton Selection Sidemenu
-                if(autonDone){
-                    Brain.Screen.setFillColor(vex::color::green);
-                }else{
-                    Brain.Screen.setFillColor(vex::color::orange);
-                }
-                Brain.Screen.drawRectangle(10, 35, 100, 40);
-                Brain.Screen.printAt(35, 60, "Auton");
-                //Driver Sidemenu
-                if(driverDone){
-                    Brain.Screen.setFillColor(vex::color::green);
-                }else{
-                    Brain.Screen.setFillColor(vex::color::orange);
-                }
-                Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "Side");
-                //Augmentation Sidemenu
-                if(augmentDone){
-                    Brain.Screen.setFillColor(vex::color::green);
-                }else{
-                    Brain.Screen.setFillColor(vex::color::orange);
-                }
-                Brain.Screen.drawRectangle(10, 135, 100, 40);
-                Brain.Screen.printAt(25, 160, "Augment");
-                //Indicate current menu by showing a green square
-                Brain.Screen.setFillColor(vex::color::green);
-                Brain.Screen.drawRectangle(10, 135, 15, 15);
-                //Review Sidemenu
-                if(reviewDone){
-                    Brain.Screen.setFillColor(vex::color::green);
-                }else{
-                    Brain.Screen.setFillColor(vex::color::orange);
-                }
-                Brain.Screen.drawRectangle(10, 185, 100, 40);
-                Brain.Screen.printAt(27, 210, "Review");
-                //Set default text color
-                Brain.Screen.setFillColor(vex::color::white);
-                while(!augmentDone){
-                    switch(augmentCount){
-                        case 0:
-                            //Clear out previous text in info box
-                            Brain.Screen.drawRectangle(130, 70, 220, 50);
-                            //Print out text
-                            Brain.Screen.printAt(180, 100, augmentModes[augmentCount]);
-                            //Wait for press
-                            waitUntil(Brain.Screen.pressing());
-                            waitUntil(!Brain.Screen.pressing());//Wait for release
-                            //"Yes" box
-                            if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                augmentCount = 1;
-                            }
-                            //"No" box
-                            else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
-                                augmentCount = 0;
-                            }
-                            //"Confirm" box
-                            if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
-                                augmentDone = true;
                                 menuCount = 3;
                             }
                         break;
-                        case 1:
+                        case 2:
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(225, 100, augmentModes[augmentCount]);
+                            Brain.Screen.printAt(225, 100, drivers[driverCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
-                            //"Yes" box
+                            //"Default" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                augmentCount = 1;
+                                driverCount = 0;
                             }
-                            //"No" box
+                            //"Next" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
-                                augmentCount = 0;
+                                driverCount++;
                             }
                             //"Confirm" box
                             if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
-                                augmentDone = true;
+                                driverDone = true;
+                                menuCount = 3;
+                            }
+                        break;
+                        case 3:
+                            //Clear out previous text in info box
+                            Brain.Screen.drawRectangle(130, 70, 220, 50);
+                            //Print out text
+                            Brain.Screen.printAt(225, 100, drivers[driverCount]);
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
+                            //"Default" box
+                            if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
+                                driverCount = 0;
+                            }
+                            //"Next" box
+                            else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
+                                driverCount++;
+                            }
+                            //"Confirm" box
+                            if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
+                                driverDone = true;
+                                menuCount = 3;
+                            }
+                        break;
+                        case 4:
+                            //Clear out previous text in info box
+                            Brain.Screen.drawRectangle(130, 70, 220, 50);
+                            //Print out text
+                            Brain.Screen.printAt(225, 100, drivers[driverCount]);
+                            //Wait for press
+                            waitUntil(Brain.Screen.pressing());
+                            waitUntil(!Brain.Screen.pressing());//Wait for release
+                            //"Default" box
+                            if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
+                                driverCount = 0;
+                            }
+                            //"Next" box
+                            else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
+                                driverCount = 0;
+                            }
+                            //"Confirm" box
+                            if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
+                                driverDone = true;
                                 menuCount = 3;
                             }
                         break;
                         default:
-                            augmentCount = 0;
+                            driverCount = 0;
                         break;
                     }
                 }
@@ -751,8 +819,8 @@ int autonSelect() {
                 //Information box headers
                 Brain.Screen.setFillColor(vex::color::black);
                 Brain.Screen.printAt(155, 90, "Autonomous Mode:");
-                Brain.Screen.printAt(200, 140, "OZ:");
-                Brain.Screen.printAt(180, 190, "Augment AM:");
+                Brain.Screen.printAt(200, 140, "side:");
+                Brain.Screen.printAt(180, 190, "driver:");
                 //Information boxes
                 Brain.Screen.setFillColor(vex::color::white);
                 Brain.Screen.drawRectangle(145, 100, 180, 20);
@@ -776,7 +844,23 @@ int autonSelect() {
                 autonPadding = (180 - ((autonNumChar)*10))/2;
                 //Print the string at a location with the offset of the padding
                 Brain.Screen.printAt((145 + autonPadding), 116, autonModes[count]);
-                //Display Driver text
+                //Display side text
+                /* Format to be in center */
+                //Initialize temporary string
+                const char *sideStr;
+                //Set temp string
+                sideStr = sides[sideCount];
+                //Initialize int for length of string
+                int sideNumChar;
+                //Set length of string
+                sideNumChar = strLen(sideStr);
+                //Initiaze int for padding
+                int sidePadding;
+                //Calculate the needed padding to center the string
+                sidePadding = (180 - ((sideNumChar)*10))/2;
+                //Print the string at a location with the offset of the padding
+                Brain.Screen.printAt((145 + sidePadding), 166, sides[sideCount]);
+                //Display driver text
                 /* Format to be in center */
                 //Initialize temporary string
                 const char *driverStr;
@@ -791,23 +875,7 @@ int autonSelect() {
                 //Calculate the needed padding to center the string
                 driverPadding = (180 - ((driverNumChar)*10))/2;
                 //Print the string at a location with the offset of the padding
-                Brain.Screen.printAt((145 + driverPadding), 166, drivers[driverCount]);
-                //Display Augment text
-                /* Format to be in center */
-                //Initialize temporary string
-                const char *augmentStr;
-                //Set temp string
-                augmentStr = augmentModes[augmentCount];
-                //Initialize int for length of string
-                int augmentNumChar;
-                //Set length of string
-                augmentNumChar = strLen(augmentStr);
-                //Initiaze int for padding
-                int augmentPadding;
-                //Calculate the needed padding to center the string
-                augmentPadding = (180 - ((augmentNumChar)*10))/2;
-                //Print the string at a location with the offset of the padding
-                Brain.Screen.printAt((145 + augmentPadding), 216, augmentModes[augmentCount]);
+                Brain.Screen.printAt((145 + driverPadding), 216, drivers[driverCount]);
                 //Set pen to black color
                 Brain.Screen.setPenColor(vex::color::black);
                 //"Confirm" button
@@ -828,22 +896,22 @@ int autonSelect() {
                 }
                 Brain.Screen.drawRectangle(10, 35, 100, 40);
                 Brain.Screen.printAt(35, 60, "Auton");
-                //Driver Sidemenu
-                if(driverDone){
+                //side Sidemenu
+                if(sideDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "OZ");
-                //Augmentation Sidemenu
-                if(augmentDone){
+                Brain.Screen.printAt(30, 110, "side");
+                //driver Sidemenu
+                if(driverDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 135, 100, 40);
-                Brain.Screen.printAt(25, 160, "Augment");
+                Brain.Screen.printAt(25, 160, "driver");
                 //Review Sidemenu
                 if(reviewDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -874,11 +942,11 @@ int autonSelect() {
                     if(Brain.Screen.xPosition() > 360 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 130 && Brain.Screen.yPosition() < 180){
                         //Default all values
                         autonDone = false;
+                        sideDone = false;
                         driverDone = false;
-                        augmentDone = false;
                         count = 1;
+                        sideCount = 0;
                         driverCount = 0;
-                        augmentCount = 0;
                         menuCount = 0;
                         //Set reviewDone to true to escape loop
                         break;
@@ -895,8 +963,8 @@ int autonSelect() {
                 //Information box headers
                 Brain.Screen.setFillColor(vex::color::black);
                 Brain.Screen.printAt(155, 70, "Autonomous Mode:");
-                Brain.Screen.printAt(200, 120, "OZ:");
-                Brain.Screen.printAt(180, 170, "Augment DC:");
+                Brain.Screen.printAt(200, 120, "side:");
+                Brain.Screen.printAt(180, 170, "driver:");
                 //Information boxes
                 Brain.Screen.setFillColor(vex::color::white);
                 Brain.Screen.drawRectangle(145, 80, 180, 20);
@@ -907,12 +975,12 @@ int autonSelect() {
                 /*----------Format to be in center-----------------*/
                 //Display Autonomous Mode text
                 Brain.Screen.printAt((145 + autonPadding), 96, autonModes[count]);
-                //Display Driver text
+                //Display side text
                 /* Format to be in center */
-                Brain.Screen.printAt((145 + driverPadding), 146, drivers[driverCount]);
-                //Display Augment text
+                Brain.Screen.printAt((145 + sidePadding), 146, sides[sideCount]);
+                //Display driver text
                 /* Format to be in center */
-                Brain.Screen.printAt((145 + augmentPadding), 196, augmentModes[augmentCount]);
+                Brain.Screen.printAt((145 + driverPadding), 196, drivers[driverCount]);
                 //Set pen to black color
                 Brain.Screen.setPenColor(vex::color::black);
                 /*----------------Side Menus------------------*/
@@ -924,22 +992,22 @@ int autonSelect() {
                 }
                 Brain.Screen.drawRectangle(10, 35, 100, 40);
                 Brain.Screen.printAt(35, 60, "Auton");
-                //Driver Sidemenu
-                if(driverDone){
+                //side Sidemenu
+                if(sideDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "OZ");
-                //Augmentation Sidemenu
-                if(augmentDone){
+                Brain.Screen.printAt(30, 110, "side");
+                //driver Sidemenu
+                if(driverDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 135, 100, 40);
-                Brain.Screen.printAt(25, 160, "Augment");
+                Brain.Screen.printAt(25, 160, "driver");
                 //Review Sidemenu
                 if(reviewDone){
                     Brain.Screen.setFillColor(vex::color::green);
