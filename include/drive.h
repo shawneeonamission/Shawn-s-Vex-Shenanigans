@@ -19,7 +19,8 @@ namespace S{
       void spin(float pwr);
       void spin(float leftpower, float rightpower);
       double joystickCurve(double joystickValue);
-      void turn(double angle, double pwr);
+      void move(double dist, double maxPwr);
+      void turn(double angle, double maxPwr);
       void turnToPoint(double x, double y);
       void turnToPoint(double x, double y, double pwr);
       void moveToPoint(double x, double y, double angle);

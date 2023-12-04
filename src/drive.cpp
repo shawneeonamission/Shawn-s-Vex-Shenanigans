@@ -80,6 +80,77 @@ double drive::joystickCurve(double joystickValue){
     return exp(((abs(joystickValue) - 100) * joystickCurveValue) / 1000) * joystickValue;
 }
 
+//Function that uses a PID loop to turn the robot to a specified angle at a specified maximum power
+void drive::move(double dist, double maxPwr){
+
+     //set and initalize variables
+  float lastError = 0;
+  float P = 0;
+  float I = 0;
+  float D = 0;
+
+  timer PIDTimer = timer();
+  double currentDist = 0;
+  double pwr = 0; 
+  /**********adjust pI and dI to tune*********/
+  float kP = 1;
+  float kI = 0;
+  float kD = 0;
+
+  //set turn target
+  int driveTarget = dist;
+
+  LDrive.resetPosition();
+  RDrive.resetPosition();
+
+  while(true){
+
+    currentDist = (((LDrive.position(rev) + RDrive.position(rev))/2) * (0.75)) * (3.25 * pi);
+
+    //calculate the P
+    P = driveTarget - currentDist;
+
+    //calculate the I
+    I += P * 10;
+
+    //Calculate the D
+    D = (P - lastError)/10;
+    lastError = P;
+    //calculate drive power
+    float total = P*kP + I*kI + D*kD;
+
+    //setting power value
+    if(fabs(total) > maxPwr){
+      pwr = maxPwr;
+    }else if(fabs(total) < 4){
+      pwr = 4;
+    }else{
+      pwr = fabs(total);
+    }
+    //check if turning left
+    if(P < 0){
+      pwr = -1*pwr;
+    }
+    //set motors to spin
+    spin(pwr,pwr);  
+    
+    //check if we have reached our target
+    if(fabs(P) > 0.5){
+      PIDTimer.clear(); 
+    }
+    if(PIDTimer.time(msec) > 50)
+    {
+      break;
+    }
+    
+    wait(10,msec);
+  }
+
+//stop the drive
+stop(brake);
+
+}
+
 
 //Function that uses a PID loop to turn the robot to a specified angle at a specified maximum power
 void drive::turn(double angle, double maxPwr){
