@@ -21,6 +21,9 @@ void feeder::stop(){
     wIntake.stop();
 }
 
+int upToggle = 0;
+int outToggle = 0;
+
 int intakeControl(){
     while(true){
 
@@ -38,6 +41,26 @@ int intakeControl(){
             else{
                 intake.stop();
             }
+        }
+        if(Controller1.ButtonLeft.pressing() && !outToggle){
+            intakeOut.open();
+            outToggle = 1;
+            waitUntil(!Controller1.ButtonLeft.pressing());
+        }
+        else if(Controller1.ButtonLeft.pressing() && outToggle){
+            intakeOut.close();
+            outToggle = 0;
+            waitUntil(!Controller1.ButtonLeft.pressing());
+        }
+        if(Controller1.ButtonUp.pressing() && !upToggle){
+            intakeTilt.open();
+            upToggle = 1;
+            waitUntil(!Controller1.ButtonUp.pressing());
+        }
+        else if(Controller1.ButtonUp.pressing() && upToggle){
+            intakeTilt.close();
+            upToggle = 0;
+            waitUntil(!Controller1.ButtonUp.pressing());
         }
         wait(10,msec);
     }

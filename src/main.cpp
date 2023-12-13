@@ -7,6 +7,8 @@
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
+
+
 #include "vex.h"
 #include "drive.h"
 #include "odom.h"
@@ -26,7 +28,7 @@ competition Competition;
 
 drive base;
 odom pos;
-feeder intake;
+S::feeder intake;
 S::link Link;
 shooter Shooter;
 
@@ -70,7 +72,7 @@ void pre_auton(void) {
 void autonomous(void) {
   //Auton 1, Left Side
   if (auton == 1){
-
+    
   }
   //Auton 2, Left Side
   if (auton == 2){
@@ -135,6 +137,8 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   task driver(Drive);
+  task shooot(Shoot);
+  task intaker(intakeControl);
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo

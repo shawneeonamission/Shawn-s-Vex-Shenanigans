@@ -23,6 +23,7 @@ extern motor wIntake;
 
 extern motor lShooter;
 extern motor rShooter;
+extern rotation cataRot;
 extern motor_group wShooter;
 
 extern pneumatics intakeOut;

@@ -3,6 +3,7 @@
 #define __INTAKE_H__
 
 extern int intoggle;
+extern int intakeControl();
 
 //define a namespace
 namespace S{

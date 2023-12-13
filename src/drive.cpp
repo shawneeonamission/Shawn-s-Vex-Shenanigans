@@ -26,6 +26,10 @@ void drive::setJoystickCurve(double curveValue){
     joystickCurveValue = curveValue;
 }
 
+double drive::getJoystickCurve(){
+  return joystickCurveValue;
+}
+
 //Function to stop the motors
 void drive::stop(){
     RD1.stop(brake);
@@ -80,7 +84,7 @@ double drive::joystickCurve(double joystickValue){
     return exp(((abs(joystickValue) - 100) * joystickCurveValue) / 1000) * joystickValue;
 }
 
-//Function that uses a PID loop to turn the robot to a specified angle at a specified maximum power
+//Function that uses a PID loop to move the robot either forward or backward at a specified maximum power
 void drive::move(double dist, double maxPwr){
 
      //set and initalize variables
@@ -270,7 +274,8 @@ void drive::moveToPoint(double x, double y, double angle){
         turnToPoint(x,y);
     }
     //**Implement Rest of move to point code here**
-
+    double dist = sqrt(pow(x,2) + pow(y,2));
+    move(dist,100);
 }
 
 //Function to have the robot move to the specified coordinates with a specified maximum power and end at the specified angle
@@ -279,10 +284,14 @@ void drive::moveToPoint(double x, double y, double angle, double maxPwr){
         turnToPoint(x,y,maxPwr);
     }
     //**Implement Rest of move to point code here**
+    double dist = sqrt(pow(x,2) + pow(y,2));
+    move(dist,maxPwr);
 }
 
 
-
+int lWingToggle = 0;
+int rWingToggle = 0;
+int WingToggle = 0;
 
 //Task to run the drive and associated mechanisms
 int Drive(){
@@ -309,6 +318,46 @@ int Drive(){
         else if(driverCount == 4){
             base.spin(rForward + lTurn, rForward - lTurn);
         }
+        //Left Wing
+        if(Controller1.ButtonB.pressing() && !lWingToggle){
+            lWing.open();
+            lWingToggle = 1;
+            if(rWingToggle){WingToggle = 1;}
+            waitUntil(!Controller1.ButtonB.pressing());
+        }
+        else if(Controller1.ButtonB.pressing() && lWingToggle){
+            lWing.close();
+            lWingToggle = 0;
+            if(!rWingToggle){WingToggle = 0;}
+            waitUntil(!Controller1.ButtonB.pressing());
+        }
+        //Right Wing
+        if(Controller1.ButtonX.pressing() && !rWingToggle){
+            rWing.open();
+            rWingToggle = 1;
+            if(lWingToggle){WingToggle = 1;}
+            waitUntil(!Controller1.ButtonX.pressing());
+        }
+        else if(Controller1.ButtonX.pressing() && rWingToggle){
+            rWing.close();
+            rWingToggle = 0;
+            if(!lWingToggle){WingToggle = 0;}
+            waitUntil(!Controller1.ButtonX.pressing());
+        }
+        //Both Wings
+        if(Controller1.ButtonY.pressing() && !WingToggle){
+            rWing.open();
+            lWing.open();
+            WingToggle = 1;
+            waitUntil(!Controller1.ButtonY.pressing());
+        }
+        else if(Controller1.ButtonY.pressing() && WingToggle){
+            rWing.close();
+            lWing.close();
+            WingToggle = 0;
+            waitUntil(!Controller1.ButtonY.pressing());
+        }
+
         wait(10,msec);
     }
 }

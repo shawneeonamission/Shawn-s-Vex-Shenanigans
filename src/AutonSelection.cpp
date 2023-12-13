@@ -230,8 +230,8 @@ int autonSelect() {
     drivers[0] = "Default(Left Arcade)";
     drivers[1] = "driver1(Tank)";
     drivers[2] = "driver2(Right Arcade)";
-    drivers[3] = "driver2(Left Split)";
-    drivers[4] = "driver2(Right Split)";
+    drivers[3] = "driver3(Left Split)";
+    drivers[4] = "driver4(Right Split)";
     //--------------------------------
     //intro
     intro();

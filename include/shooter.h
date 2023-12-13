@@ -14,9 +14,11 @@ namespace S{
     //make sure that the function is public
     public:
       //declare functions to use within class
-      void stop();
+        void stop();
       void stop(brakeType type);
       void spin(float pwr);
+      void fire(float speed);
+      void pullBack(float speed);
        };
 
 }

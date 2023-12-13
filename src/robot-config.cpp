@@ -25,6 +25,7 @@ motor wIntake = motor(PORT12,ratio6_1);
 
 motor lShooter = motor(PORT13,ratio18_1);
 motor rShooter = motor(PORT14,ratio18_1,true);
+rotation cataRot(PORT15);
 motor_group wShooter = motor_group(lShooter,rShooter);
 
 pneumatics intakeOut(Brain.ThreeWirePort.A);

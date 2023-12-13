@@ -9,45 +9,38 @@ using namespace S;
 //also include namespace vex
 using namespace vex;
 
+//Catapult rotation sensor values-------------------------------------------------------------------------
+int upAngle = 5;
+int downAngle = 95;
 
 //Function to stop the motors
 void shooter::stop(){
-    RD1.stop(brake);
-    RD2.stop(brake);
-    RD3.stop(brake);
-    RD4.stop(brake);
-    LD1.stop(brake);
-    LD2.stop(brake);
-    LD3.stop(brake);
-    LD4.stop(brake);
+    wShooter.stop(brake);
 
 }
-
 
 //Function to stop all the drive motors with a specified brake type
 void shooter::stop(brakeType type){
-    RD1.stop(brake);
-    RD2.stop(brake);
-    RD3.stop(brake);
-    RD4.stop(brake);
-    LD1.stop(brake);
-    LD2.stop(brake);
-    LD3.stop(brake);
-    LD4.stop(brake);
+    wShooter.stop(type);
 }
 
-//Function to spin all the drive motors at the specified power percentage
 void shooter::spin(float pwr){
-    RD1.spin(directionType::fwd,pwr,pct);
-    RD2.spin(directionType::fwd,pwr,pct);
-    RD3.spin(directionType::fwd,pwr,pct);
-    RD4.spin(directionType::fwd,pwr,pct); 
-    LD1.spin(directionType::fwd,pwr,pct);
-    LD2.spin(directionType::fwd,pwr,pct);
-    LD3.spin(directionType::fwd,pwr,pct);
-    LD4.spin(directionType::fwd,pwr,pct); 
+
+    wShooter.spin(fwd,pwr,pct);
 }
 
+void shooter::fire(float speed){
+    spin(100);
+    waitUntil(cataRot.angle(deg) < upAngle);
+    waitUntil(cataRot.angle(deg) > downAngle);
+    stop(hold);
+}
+
+void shooter::pullBack(float speed){
+    spin(100);
+    waitUntil(cataRot.angle(deg) > downAngle);
+    stop(hold);
+}
 
 
 
@@ -57,7 +50,10 @@ void shooter::spin(float pwr){
 int Shoot(){
     while(true){
         
-        
+        if(Controller1.ButtonL2.pressing()){
+            Shooter.fire(100);
+            waitUntil(!Controller1.ButtonR2.pressing());
+        }
 
         wait(10,msec);
     }
