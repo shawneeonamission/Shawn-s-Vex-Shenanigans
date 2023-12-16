@@ -97,7 +97,7 @@ void drive::move(double dist, double maxPwr){
   double currentDist = 0;
   double pwr = 0; 
   /**********adjust pI and dI to tune*********/
-  float kP = 1;
+  float kP = 5.5;
   float kI = 0;
   float kD = 0;
 
@@ -168,7 +168,7 @@ void drive::turn(double angle, double maxPwr){
   timer PIDTimer = timer();
   double pwr = 0; 
   /**********adjust pI and dI to tune*********/
-  float kP = 1;
+  float kP = 0.5;
   float kI = 0;
   float kD = 0;
 
@@ -178,7 +178,7 @@ void drive::turn(double angle, double maxPwr){
   while(true){
 
     //calculate the P
-    P = turnTarget - finalAngle;
+    P = turnTarget - Gyro.rotation(deg);
 
     //calculate the I
     I += P * 10;
@@ -205,7 +205,7 @@ void drive::turn(double angle, double maxPwr){
     spin(-pwr,pwr);  
     
     //check if we have reached our target
-    if(fabs(P) > 0.5){
+    if(fabs(P) > 1){
       PIDTimer.clear(); 
     }
     if(PIDTimer.time(msec) > 50)
@@ -299,8 +299,8 @@ int Drive(){
     base.setJoystickCurve(0);
 
     while(true){
-        lForward = base.joystickCurve(Controller1.Axis2.position());
-        rForward = base.joystickCurve(Controller1.Axis3.position());
+        lForward = base.joystickCurve(Controller1.Axis3.position());
+        rForward = base.joystickCurve(Controller1.Axis2.position());
         lTurn = base.joystickCurve(Controller1.Axis4.position());
         rTurn = base.joystickCurve(Controller1.Axis1.position());
         if(driverCount == 0){
@@ -313,7 +313,7 @@ int Drive(){
             base.spin(rForward + rTurn, rForward - rTurn);
         }
         else if(driverCount == 3){
-            base.spin(lForward + rTurn, lForward - rTurn);
+            base.spin(lForward + rTurn*0.5, lForward - rTurn*0.4);
         }
         else if(driverCount == 4){
             base.spin(rForward + lTurn, rForward - lTurn);

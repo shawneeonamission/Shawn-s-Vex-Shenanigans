@@ -18,7 +18,7 @@ namespace S{
       void stop(brakeType type);
       void spin(float pwr);
       void fire(float speed);
-      void pullBack(float speed);
+      void pullBack(double angle, float speed);
        };
 
 }

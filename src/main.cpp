@@ -32,13 +32,15 @@ S::feeder intake;
 S::link Link;
 shooter Shooter;
 
+timer Timer1 = timer();
+
 //Vex Link Robot Status
 linkType status = linkType::manager;
 
 //variables
-bool testing = false;
+bool testing = true;
 
-int auton = 0;
+int auton = 8;
 
 short sideCount = 0;
 
@@ -51,8 +53,11 @@ void pre_auton(void) {
   task odom(odomCalculations);
   task startLink(vexLink);
 
-  if((Competition.isFieldControl() || Competition.isCompetitionSwitch()) && !(Competition.isEnabled())){
+  if((Competition.isFieldControl() || Competition.isCompetitionSwitch()) && !(Competition.isEnabled()) && !testing){
     task autoselect(autonSelect);
+  }
+  else{
+    task asidasd(TestingMenu);
   }
 
   // All activities that occur before the competition starts
@@ -70,13 +75,87 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
+  Timer1.clear();
   //Auton 1, Left Side
   if (auton == 1){
+    Gyro.setRotation(-45,deg);
+    wShooter.spin(fwd,100,pct);
+    wait(400,msec);
+    intakeOut.open();
+    intakeTilt.open();
+    wait(600,msec);
+    wShooter.spin(reverse,100,pct);
+    wait(200,msec);
+    wShooter.stop(coast);
+    waitUntil(cataRot.angle(deg) > 95);
+    Shooter.fire(100);
+    int shot = 0;
+      intake.in(65);
+    while(Timer1.time(msec) < 45000 && shot <= 22){
+      if(cataRot.angle(deg) > 95){
+        Shooter.fire(100);
+      }
+      shot++;
+      intakeTilt.close();
+      wait(400,msec);
+      intakeTilt.open();
+      intake.in(100);
+      wait(800,msec);
+      while(intakeDie.objectDistance(mm) > 100){
+        intakeTilt.close();
+      wait(400,msec);
+      intakeTilt.open();
+      wait(1200,msec);
+      }
+      wait(600,msec);
+      Shooter.fire(100);
+    }
+    waitUntil(Timer1.time(msec) > 45000);
     
+    
+    base.spin(-40,0);
+    waitUntil(Gyro.rotation(deg) > 20);
+    base.stop();
+    base.move(-12,75);
+    base.turn(-6,100);
+    base.move(-76,100);
+    base.spin(0,-20);
+    waitUntil(Gyro.rotation(deg) < -36);
+    base.stop();
+    base.move(-16,50);
+    base.spin(0,-20);
+    waitUntil(Gyro.rotation(deg) < -88);
+    base.spin(-40);
+    wait(600,msec);
+    base.stop();
+    base.move(12,40);
+    base.spin(-40);
+    wait(600,msec);
+    base.stop();
+    base.spin(0,40);
+    waitUntil(Gyro.rotation(deg) > -25);
+    base.stop();
+    base.move(34,75);
+    base.turn(90,75);
+    base.move(24,75);
+    base.turn(0,75);
+    
+    base.spin(40);
+    wait(500,msec);
+    base.stop();
+    rWing.open(); 
+    base.spin(-40);
+    wait(1000,msec);
+    base.stop();
+    base.move(24,75);
+      base.spin(-40);
+    wait(900,msec);
+    base.stop(); 
   }
   //Auton 2, Left Side
   if (auton == 2){
-    
+    base.turn(90,100);
+    base.turn(0,100);
   }
   //Auton 3, Left Side
   if (auton == 3){
@@ -100,7 +179,81 @@ void autonomous(void) {
   }
   //Auton 1, Right Side
   if (auton == 8){
+    Gyro.setRotation(45,deg);
+    wShooter.spin(fwd,100,pct);
+    wait(400,msec);
+    intakeOut.open();
+    intakeTilt.open();
+    wait(600,msec);
+    wShooter.spin(reverse,100,pct);
+    wait(200,msec);
+    wShooter.stop(coast);
+    waitUntil(cataRot.angle(deg) > 95);
+    Shooter.fire(80);
+    int shot = 0;
+    if(!testing){
+      intake.in(65);
+    while(Timer1.time(msec) < 45000 && shot <= 22){
+      if(cataRot.angle(deg) > 95){
+        Shooter.fire(100);
+      }
+      shot++;
+      intakeTilt.close();
+      wait(400,msec);
+      intakeTilt.open();
+      intake.in(100);
+      wait(800,msec);
+      while(intakeDie.objectDistance(mm) > 100){
+        intakeTilt.close();
+      wait(400,msec);
+      intakeTilt.open();
+      wait(1200,msec);
+      }
+      wait(600,msec);
+      Shooter.fire(100);
+    }
     
+    }
+    waitUntil(Timer1.time(msec) > 45000);
+    
+    base.spin(0,-40);
+    waitUntil(Gyro.rotation(deg) < -20);
+    base.stop();
+    base.move(-12,75);
+    base.turn(8,100);
+    base.move(-76,100);
+    base.spin(-20,0);
+    waitUntil(Gyro.rotation(deg) > 36);
+    base.stop();
+    base.move(-16,50);
+    base.spin(-20,0);
+    waitUntil(Gyro.rotation(deg) > 88);
+    base.spin(-40);
+    wait(600,msec);
+    base.stop();
+    base.move(12,40);
+    base.spin(-40);
+    wait(600,msec);
+    base.stop();
+    base.spin(40,0);
+    waitUntil(Gyro.rotation(deg) < 25);
+    base.stop();
+    base.move(34,75);
+    base.turn(-90,75);
+    base.move(24,75);
+    base.turn(0,75);
+    
+    base.spin(40);
+    wait(500,msec);
+    base.stop();
+    rWing.open(); 
+    base.spin(-40);
+    wait(1000,msec);
+    base.stop();
+    base.move(24,75);
+      base.spin(-40);
+    wait(900,msec);
+    base.stop(); 
   }
    //Auton 2, Right Side
   if (auton == 9){

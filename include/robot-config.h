@@ -21,6 +21,8 @@ extern rotation perpendicularTrackingWheel;
 
 extern motor wIntake;
 
+extern distance intakeDie;
+
 extern motor lShooter;
 extern motor rShooter;
 extern rotation cataRot;

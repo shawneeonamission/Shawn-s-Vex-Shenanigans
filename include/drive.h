@@ -14,7 +14,7 @@ namespace S{
     public:
       //declare functions to use within class
       void setJoystickCurve(double curveValue);
-      double drive::getJoystickCurve();
+      double getJoystickCurve();
       void stop();
       void stop(brakeType type);
       void spin(float pwr);

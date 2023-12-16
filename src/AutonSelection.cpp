@@ -34,9 +34,9 @@ bool reviewDone;
 //Count for autonomous chooser
 short count;
 //Count for side chooser
-short sideCount;
+
 //Boolean for driver chooser
-short driverCount;
+short driverCount = 3;
 //String arrays for display text
 const char *autonModes[7];
 const char *sides[3];
@@ -83,10 +83,10 @@ void intro() {
 
 int TestingMenu(){
 
-    auton = count + 7 * sideCount;
+    
 
    if(testing == false){
-  
+    auton = count + 7 * sideCount;
     }
   Brain.Screen.clearScreen(black);
   Brain.Screen.setPenColor(white);
@@ -112,7 +112,7 @@ Brain.Screen.setPenColor(blue);
   Brain.Screen.printAt(300,80,"Auton = %d", auton);
   while(true)
   {
-    if(auton == 7){
+    if(testing){
         gyroCalibrate();
         break;
     }
@@ -337,7 +337,7 @@ int autonSelect() {
                             waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                count = 10;
+                                count = 6;
                             }
                             //"Next" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
@@ -359,7 +359,7 @@ int autonSelect() {
                             waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Previous" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                count = 5;
+                                count = 6;
                             }
                             //"Next" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
@@ -533,10 +533,10 @@ int autonSelect() {
                 //"Previous" button
                 Brain.Screen.setFillColor(vex::color::red);
                 Brain.Screen.drawRectangle(130, 140, 100, 62);
-                Brain.Screen.printAt(140, 175, "Previous");
+                Brain.Screen.printAt(140, 175, "Left");
                 //"Next Button"
                 Brain.Screen.drawRectangle(250, 140, 100, 62);
-                Brain.Screen.printAt(280, 175, "Next");
+                Brain.Screen.printAt(280, 175, "Right");
                 //Side Menus
                 //Auton Selection Sidemenu
                 if(autonDone){
@@ -585,13 +585,13 @@ int autonSelect() {
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
-                            //"Previous" box
+                            //"Left" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                sideCount = 2;
+                                sideCount =0;
                             }
-                            //"Next" box
+                            //"Right" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
-                                sideCount++;
+                                sideCount = 1;
                             }
                             //"Confirm" box
                             if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
@@ -607,13 +607,13 @@ int autonSelect() {
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
-                            //"Previous" box
+                            //"Left" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                sideCount--;
+                                sideCount = 0;
                             }
-                            //"Next" box
+                            //"Right" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
-                                sideCount++;
+                                sideCount = 1;
                             }
                             //"Confirm" box
                             if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
@@ -646,7 +646,7 @@ int autonSelect() {
                 //"Previous" button
                 Brain.Screen.setFillColor(vex::color::red);
                 Brain.Screen.drawRectangle(130, 140, 100, 62);
-                Brain.Screen.printAt(165, 175, "Default");
+                Brain.Screen.printAt(145, 175, "Default");
                 //"Next Button"
                 Brain.Screen.drawRectangle(250, 140, 100, 62);
                 Brain.Screen.printAt(290, 175, "Next");
@@ -694,7 +694,7 @@ int autonSelect() {
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(180, 100, drivers[driverCount]);
+                            Brain.Screen.printAt(140, 100, drivers[driverCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
@@ -716,7 +716,7 @@ int autonSelect() {
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(225, 100, drivers[driverCount]);
+                            Brain.Screen.printAt(140, 100, drivers[driverCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
@@ -738,7 +738,7 @@ int autonSelect() {
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(225, 100, drivers[driverCount]);
+                            Brain.Screen.printAt(140, 100, drivers[driverCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
@@ -760,7 +760,7 @@ int autonSelect() {
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(225, 100, drivers[driverCount]);
+                            Brain.Screen.printAt(140, 100, drivers[driverCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
@@ -782,7 +782,7 @@ int autonSelect() {
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(225, 100, drivers[driverCount]);
+                            Brain.Screen.printAt(140, 100, drivers[driverCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
