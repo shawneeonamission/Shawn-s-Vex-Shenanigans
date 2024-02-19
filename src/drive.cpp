@@ -296,9 +296,11 @@ int WingToggle = 0;
 //Task to run the drive and associated mechanisms
 int Drive(){
 
-    base.setJoystickCurve(0);
+    base.setJoystickCurve(10);
+    
 
     while(true){
+
         lForward = base.joystickCurve(Controller1.Axis3.position());
         rForward = base.joystickCurve(Controller1.Axis2.position());
         lTurn = base.joystickCurve(Controller1.Axis4.position());
@@ -310,7 +312,7 @@ int Drive(){
             base.spin(lForward,rForward);
         }
         else if(driverCount == 2){
-            base.spin(rForward + rTurn, rForward - rTurn);
+            base.spin(-rForward, -lForward);
         }
         else if(driverCount == 3){
             base.spin(lForward + rTurn*0.5, lForward - rTurn*0.4);
@@ -318,45 +320,19 @@ int Drive(){
         else if(driverCount == 4){
             base.spin(rForward + lTurn, rForward - lTurn);
         }
-        //Left Wing
-        if(Controller1.ButtonB.pressing() && !lWingToggle){
-            lWing.open();
-            lWingToggle = 1;
-            if(rWingToggle){WingToggle = 1;}
-            waitUntil(!Controller1.ButtonB.pressing());
-        }
-        else if(Controller1.ButtonB.pressing() && lWingToggle){
-            lWing.close();
-            lWingToggle = 0;
-            if(!rWingToggle){WingToggle = 0;}
-            waitUntil(!Controller1.ButtonB.pressing());
-        }
+   
         //Right Wing
-        if(Controller1.ButtonX.pressing() && !rWingToggle){
+        if(Controller1.ButtonDown.pressing() && !rWingToggle){
             rWing.open();
             rWingToggle = 1;
-            if(lWingToggle){WingToggle = 1;}
-            waitUntil(!Controller1.ButtonX.pressing());
+            waitUntil(!Controller1.ButtonDown.pressing());
         }
-        else if(Controller1.ButtonX.pressing() && rWingToggle){
+        else if(Controller1.ButtonDown.pressing() && rWingToggle){
             rWing.close();
             rWingToggle = 0;
-            if(!lWingToggle){WingToggle = 0;}
-            waitUntil(!Controller1.ButtonX.pressing());
+            waitUntil(!Controller1.ButtonDown.pressing());
         }
-        //Both Wings
-        if(Controller1.ButtonY.pressing() && !WingToggle){
-            rWing.open();
-            lWing.open();
-            WingToggle = 1;
-            waitUntil(!Controller1.ButtonY.pressing());
-        }
-        else if(Controller1.ButtonY.pressing() && WingToggle){
-            rWing.close();
-            lWing.close();
-            WingToggle = 0;
-            waitUntil(!Controller1.ButtonY.pressing());
-        }
+       
 
         wait(10,msec);
     }

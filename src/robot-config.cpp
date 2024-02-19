@@ -6,10 +6,10 @@ brain Brain;
 controller Controller1 = controller(primary);
 controller Controller2 = controller(partner);
 
-motor RD1 = motor(PORT8,ratio6_1);
+motor RD1 = motor(PORT8,ratio6_1,true);
 motor RD2 = motor(PORT7,ratio6_1);
 motor RD3 = motor(PORT6,ratio6_1);
-motor RD4 = motor(PORT5,ratio6_1,true);
+motor RD4 = motor(PORT5,ratio6_1);
 motor_group RDrive(RD1,RD2,RD3,RD4);
 motor LD1 = motor(PORT1,ratio6_1,true);
 motor LD2 = motor(PORT2,ratio6_1);
@@ -25,12 +25,12 @@ rotation perpendicularTrackingWheel = rotation(PORT10);
 
 motor wIntake = motor(PORT12,ratio6_1);
 
-motor lShooter = motor(PORT11,ratio18_1);
-motor rShooter = motor(PORT19,ratio18_1,true);
+motor lShooter = motor(PORT11,ratio36_1);
+motor rShooter = motor(PORT19,ratio36_1,true);
 rotation cataRot(PORT14);
 motor_group wShooter = motor_group(lShooter,rShooter);
 
 pneumatics intakeOut(Brain.ThreeWirePort.A);
 pneumatics intakeTilt(Brain.ThreeWirePort.B);
-pneumatics lWing(Brain.ThreeWirePort.C);
-pneumatics rWing(Brain.ThreeWirePort.D);
+pneumatics lWing(Brain.ThreeWirePort.D);
+pneumatics rWing(Brain.ThreeWirePort.C);

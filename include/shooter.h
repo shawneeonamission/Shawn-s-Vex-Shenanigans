@@ -4,6 +4,8 @@
 
 extern int Shoot();
 
+extern int downAngle;
+
 
 //define a namespace
 namespace S{
@@ -17,6 +19,7 @@ namespace S{
         void stop();
       void stop(brakeType type);
       void spin(float pwr);
+      double angle();
       void fire(float speed);
       void pullBack(double angle, float speed);
        };

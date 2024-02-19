@@ -36,7 +36,7 @@ short count;
 //Count for side chooser
 
 //Boolean for driver chooser
-short driverCount = 3;
+short driverCount = 2;
 //String arrays for display text
 const char *autonModes[7];
 const char *sides[3];
@@ -228,8 +228,8 @@ int autonSelect() {
     sides[1] = "Right";
 
     drivers[0] = "Default(Left Arcade)";
-    drivers[1] = "driver1(Tank)";
-    drivers[2] = "driver2(Right Arcade)";
+    drivers[1] = "driver1(Shawn)";
+    drivers[2] = "driver2(Andrew)";
     drivers[3] = "driver3(Left Split)";
     drivers[4] = "driver4(Right Split)";
     //--------------------------------

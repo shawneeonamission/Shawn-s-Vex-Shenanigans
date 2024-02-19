@@ -38,7 +38,7 @@ timer Timer1 = timer();
 linkType status = linkType::manager;
 
 //variables
-bool testing = true;
+bool testing = false;
 
 int auton = 8;
 
@@ -76,6 +76,7 @@ void pre_auton(void) {
 
 void autonomous(void) {
   Timer1.clear();
+  testing = false;
   //Auton 1, Left Side
   if (auton == 1){
     Gyro.setRotation(-45,deg);
@@ -84,9 +85,8 @@ void autonomous(void) {
     intakeOut.open();
     intakeTilt.open();
     wait(600,msec);
-    wShooter.spin(reverse,100,pct);
-    wait(200,msec);
-    wShooter.stop(coast);
+    wShooter.spin(reverse,50,pct);
+ wait(400,msec);
     waitUntil(cataRot.angle(deg) > 95);
     Shooter.fire(100);
     int shot = 0;
@@ -107,7 +107,7 @@ void autonomous(void) {
       intakeTilt.open();
       wait(1200,msec);
       }
-      wait(600,msec);
+      wait(200,msec);
       Shooter.fire(100);
     }
     waitUntil(Timer1.time(msec) > 45000);
@@ -180,28 +180,21 @@ void autonomous(void) {
   //Auton 1, Right Side
   if (auton == 8){
     Gyro.setRotation(45,deg);
-    wShooter.spin(fwd,100,pct);
-    wait(400,msec);
+    
     intakeOut.open();
     intakeTilt.open();
     wait(600,msec);
-    wShooter.spin(reverse,100,pct);
-    wait(200,msec);
-    wShooter.stop(coast);
-    waitUntil(cataRot.angle(deg) > 95);
     Shooter.fire(80);
     int shot = 0;
     if(!testing){
       intake.in(65);
-    while(Timer1.time(msec) < 45000 && shot <= 22){
-      if(cataRot.angle(deg) > 95){
-        Shooter.fire(100);
-      }
+    while(Timer1.time(msec) < 43000 && shot <= 22){
+
       shot++;
       intakeTilt.close();
       wait(400,msec);
       intakeTilt.open();
-      intake.in(100);
+      intake.in(75);
       wait(800,msec);
       while(intakeDie.objectDistance(mm) > 100){
         intakeTilt.close();
@@ -209,12 +202,12 @@ void autonomous(void) {
       intakeTilt.open();
       wait(1200,msec);
       }
-      wait(600,msec);
-      Shooter.fire(100);
+      wait(200,msec);
+      Shooter.fire(80);
     }
     
     }
-    waitUntil(Timer1.time(msec) > 45000);
+    waitUntil(Timer1.time(msec) > 43000);
     
     base.spin(0,-40);
     waitUntil(Gyro.rotation(deg) < -20);
@@ -228,11 +221,11 @@ void autonomous(void) {
     base.move(-16,50);
     base.spin(-20,0);
     waitUntil(Gyro.rotation(deg) > 88);
-    base.spin(-40);
+    base.spin(-100);
     wait(600,msec);
     base.stop();
     base.move(12,40);
-    base.spin(-40);
+    base.spin(-100);
     wait(600,msec);
     base.stop();
     base.spin(40,0);
@@ -247,11 +240,11 @@ void autonomous(void) {
     wait(500,msec);
     base.stop();
     rWing.open(); 
-    base.spin(-40);
+    base.spin(-100);
     wait(1000,msec);
     base.stop();
     base.move(24,75);
-      base.spin(-40);
+      base.spin(-100);
     wait(900,msec);
     base.stop(); 
   }
