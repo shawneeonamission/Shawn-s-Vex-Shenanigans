@@ -33,6 +33,8 @@ extern pneumatics intakeTilt;
 extern pneumatics lWing;
 extern pneumatics rWing;
 
+extern analog_in airPressure;
+
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *

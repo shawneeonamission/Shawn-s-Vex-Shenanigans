@@ -34,3 +34,5 @@ pneumatics intakeOut(Brain.ThreeWirePort.A);
 pneumatics intakeTilt(Brain.ThreeWirePort.B);
 pneumatics lWing(Brain.ThreeWirePort.D);
 pneumatics rWing(Brain.ThreeWirePort.C);
+
+analog_in airPressure(Brain.ThreeWirePort.E);

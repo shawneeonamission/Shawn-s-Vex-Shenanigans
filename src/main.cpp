@@ -16,6 +16,7 @@
 #include "VexLink.h"
 #include "shooter.h"
 #include "AutonSelection.h"
+#include "controllerScreen.h"
 #include <iostream>
 #include <array>
 #include <thread>
@@ -285,6 +286,7 @@ void usercontrol(void) {
   task driver(Drive);
   task shooot(Shoot);
   task intaker(intakeControl);
+  task infoscreen(ControllerScreen);
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
