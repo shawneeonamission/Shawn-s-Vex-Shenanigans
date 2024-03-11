@@ -20,12 +20,20 @@
 #include <iostream>
 #include <array>
 #include <thread>
+#include <rgbLED.h>
 
 using namespace S;
 using namespace vex;
 
 // A global instance of competition
 competition Competition;
+
+// instance of the addressable led on external 3wire extender port A
+// we limit to 144 leds max for this strip
+
+
+// local storage for some pixel data
+uint32_t data[RGB::MAX_LEDS];
 
 drive base;
 odom pos;
@@ -306,6 +314,11 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
+    // set all led black
+    // probably need some initial delay, TBD
+    this_thread::sleep_for(200);    
+    sideRails.clear();
+    this_thread::sleep_for(1000);    
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
@@ -313,8 +326,29 @@ int main() {
   // Run the pre-autonomous function.
   pre_auton();
 
+  memset(data, 0, sizeof(data));
+        for( int i=0;i<sideRails.max();i+=12 ) {
+          vex::color c;
+          // use low value to keep current down
+          for(int j=0;j<12;j++)
+            data[i+j] = c.hsv(  j*30, 1, 1);    // vex color will be converted to uint32_t
+        }
+
+        sideRails.set( data, 0, sideRails.max(), 0 );
+        this_thread::sleep_for(1000);   
+
   // Prevent main from exiting with an infinite loop.
   while (true) {
-    wait(100, msec);
+   
+         
+         
+        
+          sideRails.rotate(1);
+
+          sideRails.flush();
+
+          
+        
+    wait(50, msec);
   }
 }

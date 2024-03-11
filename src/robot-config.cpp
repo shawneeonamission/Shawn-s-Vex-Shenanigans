@@ -1,6 +1,8 @@
 #include "vex.h"
+#include "rgbLED.h"
 
 using namespace vex;
+using namespace S;
 
 brain Brain;
 controller Controller1 = controller(primary);
@@ -36,3 +38,6 @@ pneumatics lWing(Brain.ThreeWirePort.D);
 pneumatics rWing(Brain.ThreeWirePort.C);
 
 analog_in airPressure(Brain.ThreeWirePort.E);
+
+RGB sideRails(vex::triport(PORT22).F, 56 );
+

@@ -1,6 +1,7 @@
 #include "vex.h"
 #include "AutonSelection.h"
 #include <iostream>
+#include "rgbLED.h"
 
 void gyroCalibrate()
 {
@@ -10,6 +11,7 @@ Brain.Screen.setPenColor(red);
 Brain.Screen.drawRectangle(20,20,100,70);
 Brain.Screen.printAt(25,50,"Calibrate");
 Brain.Screen.printAt(25,70,"Inertial");
+sideRails.clear(color(100,0,0));
  
 
   while(Gyro.isCalibrating())
@@ -22,6 +24,7 @@ Brain.Screen.printAt(25,70,"Calibrated");
 Brain.Screen.printAt(25,50,"Inertial");
   Controller1.rumble(".");
   Controller1.Screen.print("Calibrated");
+  sideRails.clear(color(0,100,0));
 }
 
 //Count for side menus
@@ -171,6 +174,7 @@ Brain.Screen.setPenColor(blue);
         Brain.Screen.drawRectangle(300,175,75,50);
         Brain.Screen.setPenColor(white);
         Brain.Screen.printAt(310,210,"Red");
+        sideRails.clear(color(100,0,0));
         rob = 1;
     }
     else if((Brain.Screen.xPosition() > 400) && (Brain.Screen.xPosition() < 495) && (Brain.Screen.yPosition() > 175) && (Brain.Screen.yPosition() < 225))
@@ -185,6 +189,7 @@ Brain.Screen.setPenColor(blue);
         Brain.Screen.drawRectangle(400,175,75,50);
         Brain.Screen.setPenColor(white);
         Brain.Screen.printAt(410,210,"Blue");
+        sideRails.clear(color(0,0,100));
         rob = 2;
     }
 

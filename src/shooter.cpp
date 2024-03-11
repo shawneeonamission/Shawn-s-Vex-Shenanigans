@@ -46,13 +46,14 @@ void shooter::fire(float speed){
   
     wait(200,msec);
     }
-
+    timer Timer1 = timer();
     double p = downAngle - cataRot.angle(deg);
     double lastP = p;
     double d = p - lastP;
     double kp = 1.7;
     double kd = 4;
-    while(1){
+    while(1 && Timer1.time() < 5000){
+        
         p = downAngle - cataRot.angle(deg);
         std::cout << p << std::endl;
         d = p - lastP;
@@ -94,13 +95,16 @@ void shooter::pullBack(double angle,float speed){
 
 //Task to run the drive and associated mechanisms
 int Shoot(){
+  
     while(true){
         
         if(Controller1.ButtonL2.pressing() && driverCount == 1){
+            
             Shooter.fire(100);
             waitUntil(!Controller1.ButtonL2.pressing());
         }
         if(Controller1.ButtonR1.pressing() && driverCount == 2){
+            
             Shooter.fire(100);
             waitUntil(!Controller1.ButtonR2.pressing());
         }

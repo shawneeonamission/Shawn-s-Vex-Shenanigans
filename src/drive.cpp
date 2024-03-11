@@ -309,7 +309,7 @@ int Drive(){
             base.spin(lForward + lTurn, lForward - lTurn);
         }
         else if(driverCount == 1){
-            base.spin(lForward,rForward);
+            base.spin(lForward*0.845758,rForward*0.845758);
         }
         else if(driverCount == 2){
             base.spin(-rForward, -lForward);

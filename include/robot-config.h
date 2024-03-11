@@ -1,4 +1,6 @@
+#include "rgbLED.h"
 using namespace vex;
+using namespace S;
 
 extern brain Brain;
 extern controller Controller1;
@@ -34,6 +36,8 @@ extern pneumatics lWing;
 extern pneumatics rWing;
 
 extern analog_in airPressure;
+
+extern RGB sideRails;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
