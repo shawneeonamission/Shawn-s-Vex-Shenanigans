@@ -51,7 +51,7 @@ void rx_handler( uint8_t *buffer, int32_t length ) {
     if(buffer[0] == uint8_t('C')){
         targetX = double(buffer[1]) + (double(buffer[2])/100);
         targetY = double(buffer[3]) + (double(buffer[4])/100);
-        Brain.Screen.printAt(10,110,true,"target value (%.2f.,%.2f)", targetX, targetY );
+        Brain.Screen.printAt(20,210,true,"target value (%.2f.,%.2f)", targetX, targetY );
     }
     if(buffer[0] == uint8_t('S')){
         messageRecieved = true;
@@ -67,7 +67,7 @@ void rx_handler( uint8_t *buffer, int32_t length ) {
 int vexLink(){
     
     while(true){
-        Brain.Screen.printAt( 10, 50, true, "Link: %s", linkA.isLinked() ? "ok" : "--" );
+        Brain.Screen.printAt( 20, 190, true, "Link: %s", linkA.isLinked() ? "ok" : "--" );
         if(linkA.isLinked()){
             if(status == linkType::manager){
                 if(linkA.isReceiving()){

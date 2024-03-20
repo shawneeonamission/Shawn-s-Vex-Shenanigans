@@ -44,12 +44,12 @@ shooter Shooter;
 timer Timer1 = timer();
 
 //Vex Link Robot Status
-linkType status = linkType::manager;
+linkType status = linkType::worker;
 
 //variables
 bool testing = false;
 
-int auton = 8;
+int auton = 1;
 
 short sideCount = 0;
 
@@ -318,7 +318,12 @@ int main() {
     // probably need some initial delay, TBD
     this_thread::sleep_for(200);    
     sideRails.clear();
-    this_thread::sleep_for(1000);    
+    wait(10,msec);
+    underGlow.clear();
+    wait(10,msec);
+    underGlow2.clear();
+    this_thread::sleep_for(1000);   
+    testing = false; 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
@@ -327,7 +332,7 @@ int main() {
   pre_auton();
 
   memset(data, 0, sizeof(data));
-        for( int i=0;i<sideRails.max();i+=12 ) {
+        for( int i=0;i<underGlow.max();i+=12 ) {
           vex::color c;
           // use low value to keep current down
           for(int j=0;j<12;j++)
@@ -335,20 +340,39 @@ int main() {
         }
 
         sideRails.set( data, 0, sideRails.max(), 0 );
-        this_thread::sleep_for(1000);   
+        wait(10,msec);
+        underGlow.set( data, 0, underGlow.max(), 0 );
+        wait(10,msec);
+        underGlow2.set( data, 0, underGlow.max(), 0 );
+        wait(10,msec);
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
    
          
          
-        
+        if(Gyro.isCalibrating()){
+          waitUntil(!Gyro.isCalibrating());
+      
+        wait(1,sec);
+          sideRails.set( data, 0, sideRails.max(), 0 );
+        wait(10,msec);
+        underGlow.set( data, 0, underGlow.max(), 0 );
+        wait(10,msec);
+        underGlow2.set( data, 0, underGlow.max(), 0 );
+        wait(10,msec);
+        }
           sideRails.rotate(1);
-
           sideRails.flush();
+          wait(12.5,msec);
+          underGlow.rotate(1);
+          underGlow.flush();
+          wait(12.5,msec);
+          underGlow2.rotate(1);
+          underGlow2.flush();
 
           
         
-    wait(50, msec);
+    wait(25, msec);
   }
 }

@@ -11,7 +11,7 @@ using namespace vex;
 
 //Catapult rotation sensor values-------------------------------------------------------------------------
 int upAngle = 139;
-int downAngle = 220;
+int downAngle = 230;
 int midAngle = 180;
 
 //int upAngle = 95;

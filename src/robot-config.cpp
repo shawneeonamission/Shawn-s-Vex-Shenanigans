@@ -29,7 +29,7 @@ motor wIntake = motor(PORT12,ratio6_1);
 
 motor lShooter = motor(PORT11,ratio36_1);
 motor rShooter = motor(PORT19,ratio36_1,true);
-rotation cataRot(PORT14);
+rotation cataRot(PORT15);
 motor_group wShooter = motor_group(lShooter,rShooter);
 
 pneumatics intakeOut(Brain.ThreeWirePort.A);
@@ -40,4 +40,8 @@ pneumatics rWing(Brain.ThreeWirePort.C);
 analog_in airPressure(Brain.ThreeWirePort.E);
 
 RGB sideRails(vex::triport(PORT22).F, 56 );
+RGB underGlow(vex::triport(PORT22).G, 64 );
+RGB underGlow2(vex::triport(PORT22).H, 64 );
+
+//yay my keyboard still works yayyyyyyyyy!!!!!!!!!!!!!! woooooo hooooooooo yayyyyy!!!!! I'm quite surprised that im typing this well without keycapssds
 

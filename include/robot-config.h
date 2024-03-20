@@ -38,6 +38,8 @@ extern pneumatics rWing;
 extern analog_in airPressure;
 
 extern RGB sideRails;
+extern RGB underGlow;
+extern RGB underGlow2;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

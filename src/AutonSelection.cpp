@@ -39,7 +39,7 @@ short count;
 //Count for side chooser
 
 //Boolean for driver chooser
-short driverCount = 2;
+short driverCount = 1;
 //String arrays for display text
 const char *autonModes[7];
 const char *sides[3];
@@ -113,12 +113,13 @@ Brain.Screen.setPenColor(blue);
   Brain.Screen.printAt(300,40,"side = %d", sideCount);
   Brain.Screen.printAt(300,60,"driver = %d", driverCount);
   Brain.Screen.printAt(300,80,"Auton = %d", auton);
+  if(testing){
+        gyroCalibrate();
+        
+    }
   while(true)
   {
-    if(testing){
-        gyroCalibrate();
-        break;
-    }
+    
     waitUntil(Brain.Screen.pressing());
      waitUntil(!Brain.Screen.pressing() );
 
@@ -159,6 +160,7 @@ Brain.Screen.setPenColor(blue);
     {
         testing = 0;
         task asdiad(autonSelect);
+        break;
 
     }
 
