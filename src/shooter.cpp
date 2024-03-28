@@ -108,6 +108,12 @@ int Shoot(){
             Shooter.fire(100);
             waitUntil(!Controller1.ButtonR2.pressing());
         }
+        if(Controller1.ButtonY.pressing() && driverCount == 1){
+            
+            wShooter.spin(fwd,13,volt);
+            waitUntil(!Controller1.ButtonY.pressing());
+            wShooter.stop(coast);
+        }
       
 
 

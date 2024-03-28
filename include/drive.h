@@ -26,6 +26,7 @@ namespace S{
       void turnToPoint(double x, double y, double pwr);
       void moveToPoint(double x, double y, double angle);
       void moveToPoint(double x, double y, double angle, double pwr);
+      void purePursuit(double x, double y, double angle, double pwr);
       
        };
 

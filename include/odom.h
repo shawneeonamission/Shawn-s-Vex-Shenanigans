@@ -14,6 +14,7 @@ namespace S{
 
         public:
         void setStartPos(double x, double y, double angle);
+        double angleToPoint(double x, double y);
 
     };
 }

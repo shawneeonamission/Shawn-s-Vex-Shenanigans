@@ -60,6 +60,9 @@ void odom::setStartPos(double x, double y, double angle){
     startAngle = angle;
 
 }
+double odom::angleToPoint(double x, double y){
+    return atan2(y - finalPosY,x - finalPosY)*180/pi;
+}
 
 
 //Task to perform odometry calculations

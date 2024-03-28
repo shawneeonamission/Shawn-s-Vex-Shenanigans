@@ -288,6 +288,16 @@ void drive::moveToPoint(double x, double y, double angle, double maxPwr){
     move(dist,maxPwr);
 }
 
+//Function to have the robot move to the specified coordinates with a specified maximum power and end at the specified angle
+void drive::purePursuit(double x, double y, double angle, double maxPwr){
+    if(fabs(finalAngle - angle) > 30){
+        turnToPoint(x,y,maxPwr);
+    }
+    //**Implement Rest of move to point code here**
+    double dist = sqrt(pow(x,2) + pow(y,2));
+    move(dist,maxPwr);
+}
+
 
 int lWingToggle = 0;
 int rWingToggle = 0;
