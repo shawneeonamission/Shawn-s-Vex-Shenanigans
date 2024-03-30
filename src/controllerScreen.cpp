@@ -13,9 +13,9 @@ int ControllerScreen()
     Controller1.Screen.setCursor(1,0);
     Controller1.Screen.print("Cata %3.0f Air %.0f", wShooter.temperature(fahrenheit),tankPressure);
     Controller1.Screen.setCursor(2,0);
-    Controller1.Screen.print("in %3.0f ", wIntake.temperature(fahrenheit));
+    Controller1.Screen.print("in %3.0f fly %3.0f", wIntake.temperature(fahrenheit), rShooter.velocity(rpm)*6*7);
     Controller1.Screen.setCursor(3,0);
     Controller1.Screen.print("L %3.0f R %3.0f", LDrive.temperature(fahrenheit), RDrive.temperature(fahrenheit));
-    wait(200,msec);
+    wait(10,msec);
   }
 }

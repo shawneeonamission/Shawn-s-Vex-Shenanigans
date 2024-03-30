@@ -32,7 +32,7 @@ int intakeControl(){
     while(true){
 
         if(((Controller1.ButtonR1.pressing()  && driverCount == 1) || (Controller1.ButtonL1.pressing()  && driverCount == 2)) && intoggle != 1){
-            intake.in(100);
+            intake.in(85);
             waitUntil(!(Controller1.ButtonR1.pressing()) && !(Controller1.ButtonL1.pressing()));
         }
         else if((Controller1.ButtonR2.pressing()  && driverCount == 1) || (Controller1.ButtonL2.pressing()  && driverCount == 2) && intoggle != 2){
@@ -40,7 +40,7 @@ int intakeControl(){
             intake.out(100);
             waitUntil(!(Controller1.ButtonR2.pressing()) && !(Controller1.ButtonL2.pressing()));
             if(previntoggle == 1){
-                intake.in(100);
+                intake.in(85);
             }
             else{
                 intake.stop();

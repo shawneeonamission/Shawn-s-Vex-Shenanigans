@@ -14,6 +14,8 @@ int upAngle = 139;
 int downAngle = 230;
 int midAngle = 180;
 
+bool cata = false;
+
 //int upAngle = 95;
 //int downAngle = 12;
 //int midAngle = 180;
@@ -95,15 +97,17 @@ void shooter::pullBack(double angle,float speed){
 
 //Task to run the drive and associated mechanisms
 int Shoot(){
+    cata =  cataRot.installed();
+    std::cout << cata << std::endl;
   
     while(true){
         
-        if(Controller1.ButtonL2.pressing() && driverCount == 1){
+        if(Controller1.ButtonL2.pressing() && driverCount == 1 && cata){
             
             Shooter.fire(100);
             waitUntil(!Controller1.ButtonL2.pressing());
         }
-        if(Controller1.ButtonR1.pressing() && driverCount == 2){
+        if(Controller1.ButtonR1.pressing() && driverCount == 2 && cata){
             
             Shooter.fire(100);
             waitUntil(!Controller1.ButtonR2.pressing());
