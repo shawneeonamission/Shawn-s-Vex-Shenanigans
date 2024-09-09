@@ -32,52 +32,28 @@ double drive::getJoystickCurve(){
 
 //Function to stop the motors
 void drive::stop(){
-    RD1.stop(brake);
-    RD2.stop(brake);
-    RD3.stop(brake);
-    RD4.stop(brake);
-    LD1.stop(brake);
-    LD2.stop(brake);
-    LD3.stop(brake);
-    LD4.stop(brake);
+    RDrive.stop(brake);
+    LDrive.stop(brake);
 
 }
 
 
 //Function to stop all the drive motors with a specified brake type
 void drive::stop(brakeType type){
-    RD1.stop(brake);
-    RD2.stop(brake);
-    RD3.stop(brake);
-    RD4.stop(brake);
-    LD1.stop(brake);
-    LD2.stop(brake);
-    LD3.stop(brake);
-    LD4.stop(brake);
+    RDrive.stop(type);
+    LDrive.stop(type);
 }
 
 //Function to spin all the drive motors at the specified power percentage
 void drive::spin(float pwr){
-    RD1.spin(directionType::fwd,pwr,pct);
-    RD2.spin(directionType::fwd,pwr,pct);
-    RD3.spin(directionType::fwd,pwr,pct);
-    RD4.spin(directionType::fwd,pwr,pct); 
-    LD1.spin(directionType::fwd,pwr,pct);
-    LD2.spin(directionType::fwd,pwr,pct);
-    LD3.spin(directionType::fwd,pwr,pct);
-    LD4.spin(directionType::fwd,pwr,pct); 
+    RDrive.spin(directionType::fwd,pwr,pct);
+    LDrive.spin(directionType::fwd,pwr,pct);
 }
 
 //Function to spin the left and right drive motors at the their specified power percentages
 void drive::spin(float leftpower,float rightpower){
-    RD1.spin(directionType::fwd,rightpower,pct);
-    RD2.spin(directionType::fwd,rightpower,pct);
-    RD3.spin(directionType::fwd,rightpower,pct);
-    RD4.spin(directionType::fwd,rightpower,pct); 
-    LD1.spin(directionType::fwd,leftpower,pct);
-    LD2.spin(directionType::fwd,leftpower,pct);
-    LD3.spin(directionType::fwd,leftpower,pct);
-    LD4.spin(directionType::fwd,leftpower,pct); 
+    RDrive.spin(directionType::fwd,rightpower,pct);
+    LDrive.spin(directionType::fwd,leftpower,pct);
 }
 
 double drive::joystickCurve(double joystickValue){
@@ -109,7 +85,7 @@ void drive::move(double dist, double maxPwr){
 
   while(true){
 
-    currentDist = (((LDrive.position(rev) + RDrive.position(rev))/2) * (0.75)) * (3.25 * pi);
+    currentDist = (((LDrive.position(rev) + RDrive.position(rev))/2) * (0.6)) * (3.25 * pi);
 
     //calculate the P
     P = driveTarget - currentDist;
@@ -169,7 +145,7 @@ void drive::turn(double angle, double maxPwr){
   double pwr = 0; 
   /**********adjust pI and dI to tune*********/
   float kP = 0.5;
-  float kI = 0;
+  float kI = 0.0000001;
   float kD = 0;
 
   //set turn target
@@ -220,6 +196,73 @@ void drive::turn(double angle, double maxPwr){
 stop(brake);
 
 }
+
+//Function that uses a PID loop to turn the robot to a specified angle at a specified maximum power
+void drive::turn2(double angle, double maxPwr){
+    LDrive.resetPosition();
+  RDrive.resetPosition();
+     //set and initalize variables
+  float lastError = 0;
+  float P = 0;
+  float I = 0;
+  float D = 0;
+
+  timer PIDTimer = timer();
+  double pwr = 0; 
+  /**********adjust pI and dI to tune*********/
+  float kP = 0.5;
+  float kI = 0;
+  float kD = 0;
+
+  //set turn target
+  int turnTarget = angle;
+
+  while(true){
+
+    //calculate the P
+    P = turnTarget - (RDrive.position(deg)*0.17);
+
+    //calculate the I
+    I += P * 10;
+
+    //Calculate the D
+    D = (P - lastError)/10;
+    lastError = P;
+    //calculate drive power
+    float total = P*kP + I*kI + D*kD;
+
+    //setting power value
+    if(fabs(total) > maxPwr){
+      pwr = maxPwr;
+    }else if(fabs(total) < 4){
+      pwr = 4;
+    }else{
+      pwr = fabs(total);
+    }
+    //check if turning left
+    if(P < 0){
+      pwr = -1*pwr;
+    }
+    //set motors to spin
+    spin(-pwr,pwr);  
+    
+    //check if we have reached our target
+    if(fabs(P) > 1){
+      PIDTimer.clear(); 
+    }
+    if(PIDTimer.time(msec) > 50)
+    {
+      break;
+    }
+    
+    wait(10,msec);
+  }
+
+//stop the drive
+stop(brake);
+
+}
+
 
 //Function to turn to face the coordinates specified at full speed
 void drive::turnToPoint(double x, double y){
@@ -299,9 +342,7 @@ void drive::purePursuit(double x, double y, double angle, double maxPwr){
 }
 
 
-int lWingToggle = 0;
-int rWingToggle = 0;
-int WingToggle = 0;
+
 
 //Task to run the drive and associated mechanisms
 int Drive(){
@@ -319,7 +360,7 @@ int Drive(){
             base.spin(lForward + lTurn, lForward - lTurn);
         }
         else if(driverCount == 1){
-            base.spin(lForward*0.845758,rForward*0.845758);
+            base.spin(lForward,rForward);
         }
         else if(driverCount == 2){
             base.spin(-rForward, -lForward);
@@ -331,17 +372,7 @@ int Drive(){
             base.spin(rForward + lTurn, rForward - lTurn);
         }
    
-        //Right Wing
-        if(Controller1.ButtonDown.pressing() && !rWingToggle){
-            rWing.open();
-            rWingToggle = 1;
-            waitUntil(!Controller1.ButtonDown.pressing());
-        }
-        else if(Controller1.ButtonDown.pressing() && rWingToggle){
-            rWing.close();
-            rWingToggle = 0;
-            waitUntil(!Controller1.ButtonDown.pressing());
-        }
+      
        
 
         wait(10,msec);

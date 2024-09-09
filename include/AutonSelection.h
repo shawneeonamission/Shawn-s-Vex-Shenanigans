@@ -17,7 +17,7 @@ extern void GyroCalibrate();
 
 extern int TestingMenu();
 
-extern short sideCount;
+extern short BotCount;
 
 extern int offset;
 

@@ -7,41 +7,38 @@ using namespace S;
 brain Brain;
 controller Controller1 = controller(primary);
 controller Controller2 = controller(partner);
-
-motor RD1 = motor(PORT8,ratio6_1,true);
-motor RD2 = motor(PORT7,ratio6_1);
-motor RD3 = motor(PORT6,ratio6_1);
-motor RD4 = motor(PORT5,ratio6_1);
-motor_group RDrive(RD1,RD2,RD3,RD4);
+motor RD1 = motor(PORT7,ratio6_1);
+motor RD2 = motor(PORT8,ratio6_1);
+motor RD3 = motor(PORT9,ratio6_1,true);
+motor_group RDrive(RD1,RD2,RD3);
 motor LD1 = motor(PORT1,ratio6_1,true);
-motor LD2 = motor(PORT2,ratio6_1);
-motor LD3 = motor(PORT3,ratio6_1,true);
-motor LD4 = motor(PORT4,ratio6_1,true);
-motor_group LDrive(LD1,LD2,LD3,LD4);
+motor LD2 = motor(PORT2,ratio6_1,true);
+motor LD3 = motor(PORT3,ratio6_1);
+motor_group LDrive(LD1,LD2,LD3);
 
-distance intakeDie(PORT13);
+distance stakeDie(PORT13);
+distance goalDie(PORT12);
 
-inertial Gyro = inertial(PORT17,left);
-rotation parallelTrackingWheel = rotation(PORT9);
+inertial Gyro = inertial(PORT19,left);
+rotation leftTrackingWheel = rotation(PORT11);
+rotation rightTrackingWheel = rotation(PORT12,true);
 rotation perpendicularTrackingWheel = rotation(PORT10);
 
-motor wIntake = motor(PORT12,ratio6_1);
+motor chainBar = motor(PORT5,ratio36_1,true);
 
-motor lShooter = motor(PORT11,ratio36_1);
-motor rShooter = motor(PORT19,ratio36_1,true);
-rotation cataRot(PORT15);
-motor_group wShooter = motor_group(lShooter,rShooter);
+motor lLift = motor(PORT11,ratio36_1);
+motor rLift = motor(PORT20,ratio36_1,true);
 
-pneumatics intakeOut(Brain.ThreeWirePort.A);
-pneumatics intakeTilt(Brain.ThreeWirePort.B);
-pneumatics lWing(Brain.ThreeWirePort.D);
-pneumatics rWing(Brain.ThreeWirePort.C);
+motor_group goalLift = motor_group(lLift,rLift);
+
+rotation chainRot(PORT7);
+
+pneumatics stake(Brain.ThreeWirePort.A);
+
 
 analog_in airPressure(Brain.ThreeWirePort.E);
 
-RGB sideRails(vex::triport(PORT22).F, 56 );
-RGB underGlow(vex::triport(PORT22).G, 64 );
-RGB underGlow2(vex::triport(PORT22).H, 64 );
+RGB lSideRail(vex::triport(PORT22).F, 56 );
+RGB rSideRail(vex::triport(PORT22).G, 56 );
 
-//yay my keyboard still works yayyyyyyyyy!!!!!!!!!!!!!! woooooo hooooooooo yayyyyy!!!!! I'm quite surprised that im typing this well without keycapssds
 

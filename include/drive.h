@@ -22,6 +22,7 @@ namespace S{
       double joystickCurve(double joystickValue);
       void move(double dist, double maxPwr);
       void turn(double angle, double maxPwr);
+      void turn2(double angle, double maxPwr);
       void turnToPoint(double x, double y);
       void turnToPoint(double x, double y, double pwr);
       void moveToPoint(double x, double y, double angle);

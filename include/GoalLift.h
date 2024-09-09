@@ -1,17 +1,19 @@
 /* this is to prevent multiple definitions */
-#ifndef __SHOOTER_H__
-#define __SHOOTER_H__
+#ifndef __GOALLIFT_H__
+#define __GOALLIFT_H__
 
-extern int Shoot();
+extern int FerrisWheel();
 
 extern int downAngle;
+
+extern bool cata;
 
 
 //define a namespace
 namespace S{
 
   //define a class
-  class shooter{
+  class liftgoal{
 
     //make sure that the function is public
     public:
@@ -19,14 +21,15 @@ namespace S{
         void stop();
       void stop(brakeType type);
       void spin(float pwr);
+      void spin(float lPwr, float rPwr);
       double angle();
-      void fire(float speed);
-      void pullBack(double angle, float speed);
+      void lift(float speed);
+      void lower( float speed);
        };
 
 }
 
-extern S::shooter Shooter;
+extern S::liftgoal ferriswheel;
 //this finished the #ifndef condition
 //put all code between these 
 #endif

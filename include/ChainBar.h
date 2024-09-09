@@ -3,27 +3,33 @@
 #define __INTAKE_H__
 
 extern int intoggle;
-extern int intakeControl();
+extern int ringBarControl();
+extern int inSped;
+extern int outSped;
 
 //define a namespace
 namespace S{
 
   //define a class
-  class feeder{
+  class ringBar{
     
     //make sure that the function is public
     public:
       //declare functions to use within class
-      void in(float revs);
-      void out(float revs);
+      void spin(float prct);
       void stop();
+      void stop(brakeType type);
+      void autoStakeLift();
+      void autoLower();
+      void autoPickup();
+      void autoDeposit();
   };
 
 }
 
 
 
-extern S::feeder intake;
+extern S::ringBar chain;
 
 //this finished the #ifndef condition
 //put all code between these 

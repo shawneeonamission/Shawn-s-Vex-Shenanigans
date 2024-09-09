@@ -11,7 +11,9 @@ Brain.Screen.setPenColor(red);
 Brain.Screen.drawRectangle(20,20,100,70);
 Brain.Screen.printAt(25,50,"Calibrate");
 Brain.Screen.printAt(25,70,"Inertial");
-sideRails.clear(color(100,0,0));
+lSideRail.clear(color(100,0,0));
+wait(10,msec);
+rSideRail.clear(color(100,0,0));
  
 
   while(Gyro.isCalibrating())
@@ -24,14 +26,16 @@ Brain.Screen.printAt(25,70,"Calibrated");
 Brain.Screen.printAt(25,50,"Inertial");
   Controller1.rumble(".");
   Controller1.Screen.print("Calibrated");
-  sideRails.clear(color(0,100,0));
+  lSideRail.clear(color(0,100,0));
+  wait(10,msec);
+  rSideRail.clear(color(0,100,0));
 }
 
 //Count for side menus
 int menuCount;
 //Menu Conditions
 bool autonDone;
-bool sideDone;
+bool BotDone;
 bool driverDone;
 bool reviewDone;
 //Count for autonomous chooser
@@ -42,7 +46,7 @@ short count;
 short driverCount = 1;
 //String arrays for display text
 const char *autonModes[7];
-const char *sides[3];
+const char *Bots[3];
 const char *drivers[5];
 
 uint8_t   imageBuffer[ 240 * (128 * 1024) ];
@@ -89,7 +93,7 @@ int TestingMenu(){
     
 
    if(testing == false){
-    auton = count + 7 * sideCount;
+    auton = count + 7 * BotCount;
     }
   Brain.Screen.clearScreen(black);
   Brain.Screen.setPenColor(white);
@@ -110,7 +114,7 @@ Brain.Screen.setPenColor(blue);
   Brain.Screen.printAt(410,210,"Blue");
   Brain.Screen.setPenColor(white);
   Brain.Screen.printAt(300,20,"count = %d", count);
-  Brain.Screen.printAt(300,40,"side = %d", sideCount);
+  Brain.Screen.printAt(300,40,"Side = %d", BotCount);
   Brain.Screen.printAt(300,60,"driver = %d", driverCount);
   Brain.Screen.printAt(300,80,"Auton = %d", auton);
   if(testing){
@@ -176,7 +180,9 @@ Brain.Screen.setPenColor(blue);
         Brain.Screen.drawRectangle(300,175,75,50);
         Brain.Screen.setPenColor(white);
         Brain.Screen.printAt(310,210,"Red");
-        sideRails.clear(color(100,0,0));
+        lSideRail.clear(color(100,0,0));
+        wait(10,msec);
+        rSideRail.clear(color(100,0,0));
         rob = 1;
     }
     else if((Brain.Screen.xPosition() > 400) && (Brain.Screen.xPosition() < 495) && (Brain.Screen.yPosition() > 175) && (Brain.Screen.yPosition() < 225))
@@ -191,7 +197,9 @@ Brain.Screen.setPenColor(blue);
         Brain.Screen.drawRectangle(400,175,75,50);
         Brain.Screen.setPenColor(white);
         Brain.Screen.printAt(410,210,"Blue");
-        sideRails.clear(color(0,0,100));
+        lSideRail.clear(color(0,0,100));
+        wait(10,msec);
+        rSideRail.clear(color(0,0,100));
         rob = 2;
     }
 
@@ -224,19 +232,19 @@ int autonSelect() {
         when shifting through the choices.1
     */
     autonModes[0] = "Do Nothing";
-    autonModes[1] = "Skills";
-    autonModes[2] = "Do Nothing";
-    autonModes[3] = "Do Nothing";
-    autonModes[4] = "Do Nothing";
+    autonModes[1] = "";
+    autonModes[2] = "Ball Rush";
+    autonModes[3] = "Skills";
+    autonModes[4] = "PID Tuning";
     autonModes[5] = "Do Nothing";
     autonModes[6] = "Do Nothing";
 
-    sides[0] = "Left";
-    sides[1] = "Right";
+    Bots[0] = "Left";
+    Bots[1] = "Right";
 
     drivers[0] = "Default(Left Arcade)";
     drivers[1] = "driver1(Shawn)";
-    drivers[2] = "driver2(Andrew)";
+    drivers[2] = "driver2(Jaden)";
     drivers[3] = "driver3(Left Split)";
     drivers[4] = "driver4(Right Split)";
     //--------------------------------
@@ -245,14 +253,14 @@ int autonSelect() {
     //Initialize menu variables
     menuCount = 0;
     autonDone = false;
-    sideDone = false;
+    BotDone = false;
     driverDone = false;
     reviewDone = false; 
     /* Sub-Menu Variable Initialization */
     //Autonomous Chooser
     count = 1;
     //side Chooser
-    sideCount = 0;
+    BotCount = 0;
     //driver Chooser
     driverCount = 0;
     //Run infinite loop
@@ -306,13 +314,13 @@ int autonSelect() {
                 Brain.Screen.setFillColor(vex::color::green);
                 Brain.Screen.drawRectangle(10, 35, 15, 15);
                 //side Sidemenu
-                if(sideDone){
+                if(BotDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "side");
+                Brain.Screen.printAt(30, 110, "Side");
                 //driver Sidemenu
                 if(driverDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -320,7 +328,7 @@ int autonSelect() {
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 135, 100, 40);
-                Brain.Screen.printAt(25, 160, "driver");
+                Brain.Screen.printAt(25, 160, "Driver");
                 //Review Sidemenu
                 if(reviewDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -527,7 +535,7 @@ int autonSelect() {
                 Brain.Screen.setPenColor(vex::color::white);
                 Brain.Screen.printAt(110, 20, "Pre-Autonomous Chooser v1.0"); 
                 //"Select side" and selected mode display
-                Brain.Screen.printAt(170, 50, "Select Offensive Zone");
+                Brain.Screen.printAt(170, 50, "Select Robot");
                 Brain.Screen.setFillColor(vex::color::white);
                 Brain.Screen.drawRectangle(130, 70, 220, 50);
                 //Set pen to black color
@@ -554,13 +562,13 @@ int autonSelect() {
                 Brain.Screen.drawRectangle(10, 35, 100, 40);
                 Brain.Screen.printAt(35, 60, "Auton");
                 //side Sidemenu
-                if(sideDone){
+                if(BotDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "side");
+                Brain.Screen.printAt(30, 110, "Side");
                 //Indicate current menu by showing a green square
                 Brain.Screen.setFillColor(vex::color::green);
                 Brain.Screen.drawRectangle(10, 85, 15, 15);
@@ -571,7 +579,7 @@ int autonSelect() {
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 135, 100, 40);
-                Brain.Screen.printAt(25, 160, "driver");
+                Brain.Screen.printAt(25, 160, "Driver");
                 //Review Sidemenu
                 if(reviewDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -582,27 +590,27 @@ int autonSelect() {
                 Brain.Screen.printAt(27, 210, "Review");
                 //Set default text color
                 Brain.Screen.setFillColor(vex::color::white);
-                while(!sideDone){
-                    switch(sideCount){
+                while(!BotDone){
+                    switch(BotCount){
                         case 0:
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(160, 100, sides[sideCount]);
+                            Brain.Screen.printAt(160, 100, Bots[BotCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Left" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                sideCount =0;
+                                BotCount =0;
                             }
                             //"Right" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
-                                sideCount = 1;
+                                BotCount = 1;
                             }
                             //"Confirm" box
                             if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
-                                sideDone = true;
+                                BotDone = true;
                                 menuCount = 2;
                             }
                         break;
@@ -610,21 +618,21 @@ int autonSelect() {
                             //Clear out previous text in info box
                             Brain.Screen.drawRectangle(130, 70, 220, 50);
                             //Print out text
-                            Brain.Screen.printAt(160, 100, sides[sideCount]);
+                            Brain.Screen.printAt(160, 100, Bots[BotCount]);
                             //Wait for press
                             waitUntil(Brain.Screen.pressing());
                             waitUntil(!Brain.Screen.pressing());//Wait for release
                             //"Left" box
                             if(Brain.Screen.xPosition() > 130 && Brain.Screen.xPosition() < 230 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){ 
-                                sideCount = 0;
+                                BotCount = 0;
                             }
                             //"Right" box
                             else if(Brain.Screen.xPosition() > 250 && Brain.Screen.xPosition() < 350 && Brain.Screen.yPosition() > 140 && Brain.Screen.yPosition() < 202.5){
-                                sideCount = 1;
+                                BotCount = 1;
                             }
                             //"Confirm" box
                             if(Brain.Screen.xPosition() > 380 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 40 && Brain.Screen.yPosition() < 90){
-                                sideDone = true;
+                                BotDone = true;
                                 menuCount = 2;
                             }
                         break;
@@ -640,7 +648,7 @@ int autonSelect() {
                 Brain.Screen.setPenColor(vex::color::white);
                 Brain.Screen.printAt(110, 20, "Pre-Autonomous Chooser v1.0"); 
                 //"side side Control?" and selected mode display
-                Brain.Screen.printAt(130, 50, "which driver?");
+                Brain.Screen.printAt(130, 50, "which Driver?");
                 Brain.Screen.setFillColor(vex::color::white);
                 Brain.Screen.drawRectangle(130, 70, 220, 50);
                 //Set pen to black color
@@ -667,13 +675,13 @@ int autonSelect() {
                 Brain.Screen.drawRectangle(10, 35, 100, 40);
                 Brain.Screen.printAt(35, 60, "Auton");
                 //side Sidemenu
-                if(sideDone){
+                if(BotDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "side");
+                Brain.Screen.printAt(30, 110, "Side");
                 //driver Sidemenu
                 if(driverDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -826,7 +834,7 @@ int autonSelect() {
                 //Information box headers
                 Brain.Screen.setFillColor(vex::color::black);
                 Brain.Screen.printAt(155, 90, "Autonomous Mode:");
-                Brain.Screen.printAt(200, 140, "side:");
+                Brain.Screen.printAt(200, 140, "Side:");
                 Brain.Screen.printAt(180, 190, "driver:");
                 //Information boxes
                 Brain.Screen.setFillColor(vex::color::white);
@@ -854,19 +862,19 @@ int autonSelect() {
                 //Display side text
                 /* Format to be in center */
                 //Initialize temporary string
-                const char *sideStr;
+                const char *BotStr;
                 //Set temp string
-                sideStr = sides[sideCount];
+                BotStr = Bots[BotCount];
                 //Initialize int for length of string
-                int sideNumChar;
+                int BotNumChar;
                 //Set length of string
-                sideNumChar = strLen(sideStr);
+                BotNumChar = strLen(BotStr);
                 //Initiaze int for padding
-                int sidePadding;
+                int BotPadding;
                 //Calculate the needed padding to center the string
-                sidePadding = (180 - ((sideNumChar)*10))/2;
+                BotPadding = (180 - ((BotNumChar)*10))/2;
                 //Print the string at a location with the offset of the padding
-                Brain.Screen.printAt((145 + sidePadding), 166, sides[sideCount]);
+                Brain.Screen.printAt((145 + BotPadding), 166, Bots[BotCount]);
                 //Display driver text
                 /* Format to be in center */
                 //Initialize temporary string
@@ -904,13 +912,13 @@ int autonSelect() {
                 Brain.Screen.drawRectangle(10, 35, 100, 40);
                 Brain.Screen.printAt(35, 60, "Auton");
                 //side Sidemenu
-                if(sideDone){
+                if(BotDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "side");
+                Brain.Screen.printAt(30, 110, "Side");
                 //driver Sidemenu
                 if(driverDone){
                     Brain.Screen.setFillColor(vex::color::green);
@@ -949,10 +957,10 @@ int autonSelect() {
                     if(Brain.Screen.xPosition() > 360 && Brain.Screen.xPosition() < 460 && Brain.Screen.yPosition() > 130 && Brain.Screen.yPosition() < 180){
                         //Default all values
                         autonDone = false;
-                        sideDone = false;
+                        BotDone = false;
                         driverDone = false;
                         count = 1;
-                        sideCount = 0;
+                        BotCount = 0;
                         driverCount = 0;
                         menuCount = 0;
                         //Set reviewDone to true to escape loop
@@ -970,7 +978,7 @@ int autonSelect() {
                 //Information box headers
                 Brain.Screen.setFillColor(vex::color::black);
                 Brain.Screen.printAt(155, 70, "Autonomous Mode:");
-                Brain.Screen.printAt(200, 120, "side:");
+                Brain.Screen.printAt(200, 120, "Side:");
                 Brain.Screen.printAt(180, 170, "driver:");
                 //Information boxes
                 Brain.Screen.setFillColor(vex::color::white);
@@ -984,7 +992,7 @@ int autonSelect() {
                 Brain.Screen.printAt((145 + autonPadding), 96, autonModes[count]);
                 //Display side text
                 /* Format to be in center */
-                Brain.Screen.printAt((145 + sidePadding), 146, sides[sideCount]);
+                Brain.Screen.printAt((145 + BotPadding), 146, Bots[BotCount]);
                 //Display driver text
                 /* Format to be in center */
                 Brain.Screen.printAt((145 + driverPadding), 196, drivers[driverCount]);
@@ -1000,13 +1008,13 @@ int autonSelect() {
                 Brain.Screen.drawRectangle(10, 35, 100, 40);
                 Brain.Screen.printAt(35, 60, "Auton");
                 //side Sidemenu
-                if(sideDone){
+                if(BotDone){
                     Brain.Screen.setFillColor(vex::color::green);
                 }else{
                     Brain.Screen.setFillColor(vex::color::orange);
                 }
                 Brain.Screen.drawRectangle(10, 85, 100, 40);
-                Brain.Screen.printAt(30, 110, "side");
+                Brain.Screen.printAt(30, 110, "Side");
                 //driver Sidemenu
                 if(driverDone){
                     Brain.Screen.setFillColor(vex::color::green);
