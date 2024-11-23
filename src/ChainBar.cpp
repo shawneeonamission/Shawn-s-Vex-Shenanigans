@@ -22,86 +22,53 @@ void ringBar::stop(){
 void ringBar::stop(brakeType type){
     chainBar.stop(type);
 }
-void ringBar::autoStakeLift(){
-    if(chainRot.position(deg) > 85){
-        spin(-100);
-    waitUntil(chainRot.position(deg) <= 85 || Controller1.ButtonB.pressing());
-    stop(hold);
-    }
-    else{
-        spin(100);
-    waitUntil(chainRot.position(deg) >= 85 || Controller1.ButtonB.pressing());
-    stop(hold);
-    }
-}
-void ringBar::autoLower(){
-    if(chainRot.position(deg) > 18){
-        spin(-100);
-    waitUntil(chainRot.position(deg) <= 25 || Controller1.ButtonR1.pressing() || Controller1.ButtonB.pressing());
-    stop(hold);
-    }
-    else{
-        spin(100);
-    waitUntil(chainRot.position(deg) >= 25 || Controller1.ButtonR1.pressing() || Controller1.ButtonB.pressing());
-    stop(hold);
-    }
-}
-void ringBar::autoPickup(){
-    spin(-100);
-    waitUntil(chainRot.position(deg) <= 30 || Controller1.ButtonB.pressing());
-    stop(hold);
-    stake.close();
-    wait(500,msec);
-    spin(-50);
-    waitUntil(chainRot.position(deg) <= 6 || Controller1.ButtonB.pressing());
-    chain.stop(coast);
-    wait(200,msec);
-    stake.open();
-    wait(200,msec);
-    spin(50);
-    waitUntil(chainRot.position(deg) >= 20 || Controller1.ButtonB.pressing());
 
-}
-
-void ringBar::autoDeposit(){
+void ringBar::lift(double angle){
     spin(100);
-    waitUntil(chainRot.position(deg) >= 170 || Controller1.ButtonB.pressing());
-    stake.close();
-    wait(500,msec);
-    stop(coast);
-    waitUntil(stakeDie.objectDistance(mm) > 120 || Controller1.ButtonB.pressing());
-    spin(-100);
-    waitUntil(chainRot.position(deg) <= 25 || Controller1.ButtonB.pressing());
+    waitUntil(chainRot.position(deg) > angle - 135);
     stop(hold);
-
 }
+
 
 int chainState = 0;
 int staketoggle = 0;
 
-int ringBarControl(){
+int chainBarControl(){
     while(true){
-
-        if(Controller1.ButtonR1.pressing()){
-            chain.autoStakeLift();
-            waitUntil(!Controller1.ButtonR1.pressing());
+        if(!staketoggle){
+            if(Controller1.ButtonR1.pressing() && chainState != 1){
+            chain.spin(100);
+            chainState = 1;
+            waitUntil(!(Controller1.ButtonR1.pressing()));
         }
-        else if(Controller1.ButtonR2.pressing()){
-            chain.autoLower();
-            waitUntil(!Controller1.ButtonR2.pressing());
-        }
-
-        else if(Controller1.ButtonL2.pressing()){
-            chain.autoPickup();
-            if(stakeDie.objectDistance(mm) < 30){
-                chain.autoDeposit();
+        else if(Controller1.ButtonR2.pressing() && chainState != 2){
+            chain.spin(-100);
+            waitUntil(!(Controller1.ButtonR2.pressing()));
+            if(chainState == 1){
+                chain.spin(100);
             }
-            waitUntil(!Controller1.ButtonL2.pressing());
+            else{
+                chain.stop();
+            }
         }
-        else{
-            chain.stop(hold);
+        else if(((Controller1.ButtonR1.pressing()  && driverCount == 1) || (Controller1.ButtonL1.pressing()  && driverCount == 2)) && chainState == 1){
+            chain.stop();
+            chainState = 0;
+            waitUntil(!(Controller1.ButtonR1.pressing()) && !(Controller1.ButtonL1.pressing()));
         }
-
+        }
+        
+        else {
+            if(Controller1.ButtonR1.pressing()){
+                chain.lift(90);
+                waitUntil(!(Controller1.ButtonR1.pressing()));
+                
+            }
+            else if(Controller1.ButtonR2.pressing()){
+                chain.stop(coast);
+                waitUntil(!(Controller1.ButtonR2.pressing()));
+            }
+        }
         //Shift Key
         while(Controller1.ButtonB.pressing()){
         if(Controller1.ButtonL1.pressing()){
@@ -115,15 +82,15 @@ int ringBarControl(){
         else{
             chain.stop(hold);
         }
-        //stake close button
+        //pto shift open button
         if(Controller1.ButtonLeft.pressing() && !staketoggle){
-            stake.open();
+            shift.open();
             staketoggle = 1;
             waitUntil(!Controller1.ButtonLeft.pressing());
         }
-        //stake open button
+        //pto shift close button
         else if(Controller1.ButtonLeft.pressing() && staketoggle){
-            stake.close();
+            shift.close();
             staketoggle = 0;
             waitUntil(!Controller1.ButtonLeft.pressing());
         }
@@ -133,4 +100,5 @@ int ringBarControl(){
         
         wait(10,msec);
     }
+    return 0;
 }            

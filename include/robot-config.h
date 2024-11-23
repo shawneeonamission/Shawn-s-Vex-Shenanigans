@@ -16,7 +16,12 @@ extern rotation perpendicularTrackingWheel;
 
 extern motor chainBar;
 
-extern distance stakeDie;
+extern motor lRingBelt;
+extern motor rRingBelt;
+
+extern motor_group ringBelt;
+
+
 extern distance goalDie;
 
 extern motor lLift;
@@ -25,13 +30,17 @@ extern motor_group goalLift;
 
 extern rotation chainRot;
 
-extern pneumatics stake;
+extern pneumatics shift;
+extern pneumatics paddle;
+extern pneumatics clamp;
 
 extern analog_in airPressure;
 
 extern RGB lSideRail;
 extern RGB rSideRail;
 
+extern linkType status;
+extern serial_link linkA;
 
 
 void vexcodeInit(void);

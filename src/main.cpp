@@ -13,6 +13,7 @@
 #include "drive.h"
 #include "odom.h"
 #include "ChainBar.h"
+#include "RingBelt.h"
 #include "VexLink.h"
 #include "GoalLift.h"
 #include "AutonSelection.h"
@@ -40,11 +41,11 @@ odom pos;
 S::ringBar chain;
 S::link Link;
 liftgoal ferriswheel;
+S::hooks belt;
 
 timer Timer1 = timer();
 
-//Vex Link Robot Status
-linkType status = linkType::worker;
+
 
 //variables
 bool testing = false;
@@ -61,7 +62,7 @@ void pre_auton(void) {
 
   
   task startLink(vexLink);
-  task omoomdo(odomCalculations);
+
 
   if((Competition.isFieldControl() || Competition.isCompetitionSwitch()) && !(Competition.isEnabled()) && !testing){
     task autoselect(autonSelect);
@@ -88,55 +89,55 @@ void autonomous(void) {
   
   Timer1.clear();
   testing = false;
-  //Auton 1, Cata Bot
+  //Auton 1, Hook Bot
   if (auton == 1){
    
   }
-  //Auton 2, Cata Bot
+  //Auton 2, hook Bot
   if (auton == 2){
  
   }
-  //Auton 3, Cata Bot
+  //Auton 3, hook Bot
   if (auton == 3){
     
   }
-  //Auton 4, Cata Bot
+  //Auton 4, hook Bot
   if (auton == 4){
     
   }
-  //Auton 5, Cata Bot
+  //Auton 5, hook Bot
   if (auton == 5){
 
   }
-  //Auton 6, Cata Bot
+  //Auton 6, hook Bot
   if (auton == 6){
     
   }
-  //Secret, Do Nothing Flywheel Bot
+  //Secret, Do Nothing Push Bot
   if (auton == 7){
 
   }
-  //Auton 1, Flywheel Bot
+  //Auton 1, Push Bot
   if (auton == 8){
     
   }
-   //Auton 2, Flywheel Bot
+   //Auton 2, Push Bot
   if (auton == 9){
     
   }
-   //Auton 3, Flywheel Bot
+   //Auton 3, Push Bot
   if (auton == 10){
     
   }
-   //Auton 4, Flywheel Bot
+   //Auton 4, Push Bot
   if (auton == 11){
     
   }
-   //Auton 5, Flywheel Bot
+   //Auton 5, Push Bot
   if (auton == 12){
     
   }
-    //Auton 6, Flywheel Bot
+    //Auton 6, Push Bot
   if (auton == 12){
     
   }
@@ -156,7 +157,8 @@ void usercontrol(void) {
   // User control code here, inside the loop
   task driver(Drive);
   task liftdagoal(FerrisWheel);
-  task Ringer(ringBarControl);
+  task chaine(chainBarControl);
+  task Ringer(ringBeltControl);
   task infoscreen(ControllerScreen);
   while (1) {
     // This is the main execution loop for the user control program.
@@ -177,6 +179,7 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
+ 
 
     // set all led black
     // probably need some initial delay, TBD

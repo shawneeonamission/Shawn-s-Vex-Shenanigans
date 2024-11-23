@@ -61,10 +61,6 @@ void liftgoal::lower(float speed){
     stop(brake);
 }
 
-
-
-
-
 //Task to run the drive and associated mechanisms
 int FerrisWheel(){
     goalLift.resetPosition();

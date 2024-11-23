@@ -1,9 +1,9 @@
 /* this is to prevent multiple definitions */
-#ifndef __INTAKE_H__
-#define __INTAKE_H__
+#ifndef __RINGBELT_H__
+#define __RINGBELT_H__
 
 extern int intoggle;
-extern int chainBarControl();
+extern int ringBeltControl();
 extern int inSped;
 extern int outSped;
 
@@ -11,7 +11,7 @@ extern int outSped;
 namespace S{
 
   //define a class
-  class ringBar{
+  class hooks{
     
     //make sure that the function is public
     public:
@@ -26,7 +26,7 @@ namespace S{
 
 
 
-extern S::ringBar chain;
+extern S::hooks belt;
 
 //this finished the #ifndef condition
 //put all code between these 

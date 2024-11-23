@@ -20,6 +20,7 @@ namespace S{
           
             void send(double x, double y);
             void send(std::string message);
+            void send(double lForward, double rForward, double lTurn, double rTurn);
     };
 }
 extern S::link Link;

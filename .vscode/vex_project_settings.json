@@ -1,16 +1,16 @@
 {
 	"extension": {
-		"version": "0.4.2",
+		"version": "0.6.0",
 		"json": 1
 	},
 	"project": {
-		"name": "Shawns Shenanigans",
+		"name": "Shawns_Shenanigans",
 		"description": "",
-		"creationDate": "5/14/2023, 9:00:30 PM",
+		"creationDate": "Thu, 12 Sep 2024 01:44:08 GMT",
 		"platform": "V5",
 		"language": "cpp",
-		"slot": 6,
-		"sdkVersion": "V5_20220726_10_00_00",
+		"slot": 1,
+		"sdkVersion": "V5_20240223_11_00_00",
 		"cpp": {
 			"includePath": []
 		}
