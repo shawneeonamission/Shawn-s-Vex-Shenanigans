@@ -21,6 +21,7 @@ extern motor rRingBelt;
 
 extern motor_group ringBelt;
 
+extern optical ringColor;
 
 extern distance goalDie;
 
@@ -30,9 +31,11 @@ extern motor_group goalLift;
 
 extern rotation chainRot;
 
-extern pneumatics shift;
-extern pneumatics paddle;
+extern pneumatics hang;
+extern pneumatics doink;
 extern pneumatics clamp;
+extern pneumatics intakeLift;
+extern pneumatics lock;
 
 extern analog_in airPressure;
 

@@ -78,7 +78,7 @@ void drive::move(double dist, double maxPwr){
   double currentDist = 0;
   double pwr = 0; 
   /**********adjust pI and dI to tune*********/
-  float kP = 5.5;
+  float kP = 5;
   float kI = 0;
   float kD = 0;
 
@@ -94,7 +94,7 @@ void drive::move(double dist, double maxPwr){
 
     //calculate the P
     P = driveTarget - currentDist;
-
+    std::cout << P << " :Move P" << std::endl;
     //calculate the I
     I += P * 10;
 
@@ -153,8 +153,8 @@ void drive::turn(double angle, double maxPwr){
   timer PIDTimer = timer();
   double pwr = 0; 
   /**********adjust pI and dI to tune*********/
-  float kP = 0.5;
-  float kI = 0.0000001;
+  float kP = 0.8;
+  float kI = 0;
   float kD = 0;
 
   //set turn target
@@ -164,7 +164,7 @@ void drive::turn(double angle, double maxPwr){
 
     //calculate the P
     P = turnTarget - Gyro.rotation(deg);
-
+    std::cout << P << " :Turn P" << std::endl;
     //calculate the I
     I += P * 10;
 
@@ -417,7 +417,9 @@ stop(brake);
 int Drive(){
 
     base.setJoystickCurve(10);
-    
+    if(status == linkType::worker){
+      driverCount = 0;
+    }
 
     while(true){
         if(Controller1.ButtonX.pressing() && status == linkType::manager){
@@ -434,10 +436,15 @@ int Drive(){
         
         if((control == true && status == linkType::manager) || status == linkType::worker){
         if(driverCount == 0){
-            base.spin(lForward + lTurn, lForward - lTurn);
+            base.spin((lForward + lTurn) * 0.9, (lForward - lTurn)*0.9);
         }
         else if(driverCount == 1){
+            if(status == linkType::manager){
             base.spin(lForward,rForward);
+            }
+            else{
+            base.spin(rForward,lForward);
+            }
         }
         else if(driverCount == 2){
             base.spin(-rForward, -lForward);

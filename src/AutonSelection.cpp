@@ -232,19 +232,19 @@ int autonSelect() {
         when shifting through the choices.1
     */
     autonModes[0] = "Do Nothing";
-    autonModes[1] = "";
-    autonModes[2] = "Ball Rush";
+    autonModes[1] = "Main";
+    autonModes[2] = "PID Tuning";
     autonModes[3] = "Skills";
-    autonModes[4] = "PID Tuning";
-    autonModes[5] = "Do Nothing";
+    autonModes[4] = "HS 2 Ring";
+    autonModes[5] = "HS MultiStake";
     autonModes[6] = "Do Nothing";
 
     Bots[0] = "Left";
     Bots[1] = "Right";
 
-    drivers[0] = "Default(Left Arcade)";
+    drivers[0] = "Default(Sean)";
     drivers[1] = "driver1(Shawn)";
-    drivers[2] = "driver2(Jaden)";
+    drivers[2] = "driver2(E)";
     drivers[3] = "driver3(Left Split)";
     drivers[4] = "driver4(Right Split)";
     //--------------------------------

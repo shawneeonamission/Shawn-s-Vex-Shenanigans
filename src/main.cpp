@@ -40,7 +40,7 @@ drive base;
 odom pos;
 S::ringBar chain;
 S::link Link;
-liftgoal ferriswheel;
+liftgoal choo;
 S::hooks belt;
 
 timer Timer1 = timer();
@@ -56,15 +56,45 @@ short BotCount = 0;
 
 int rob = 0;
 
+uint8_t     myTestData[ 1000 ];
+uint8_t     myReadBuffer[ 1000 ];
+
+std::array<unsigned char,100> convertToASCII(std::string s)
+{
+  std::array<unsigned char,100> result;
+    for (int i = 0; i < s.length(); i++)
+    {
+        result[i] = (int)s[i];
+    }
+    return result;
+}
+void logtoSDCard(std::string s)
+{
+  std::array<unsigned char,100> t = convertToASCII(s);
+  for(int i=0; i < s.length(); i++)
+  {
+    
+    myTestData[i] = t[i];
+  }
+  myTestData[s.length() + 1] = 0x0A;
+        
+  //use your object and function
+  if(!Brain.SDcard.exists("data_logging/testdatalogging.txt")){
+    Brain.SDcard.savefile( "data_logging/testdatalogging.txt", myTestData, sizeof(myTestData) );
+  } else{
+    Brain.SDcard.appendfile("data_logging/testdatalogging.txt", myTestData,sizeof(myTestData));
+  }
+  
+}
+
 void pre_auton(void) {
+  if(Competition.isCompetitionSwitch()){
+    std::cout << "Comp Switch" << std::endl;
   testing = true;
+  }
   pos.setStartPos(0,0,0);
 
-  
-  task startLink(vexLink);
-
-
-  if((Competition.isFieldControl() || Competition.isCompetitionSwitch()) && !(Competition.isEnabled()) && !testing){
+  if((Competition.isFieldControl()) && !(Competition.isEnabled()) && !testing){
     task autoselect(autonSelect);
   }
   else{
@@ -86,26 +116,76 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  
+  chainRot.resetPosition();
   Timer1.clear();
-  testing = false;
   //Auton 1, Hook Bot
   if (auton == 1){
-   
+    Gyro.setRotation(-33,deg);
+    
+    base.move(-18,20);
+    chain.lift(60);
+    hang.open();
+    choo.lift(100);
+    base.turn(-92,40);
+    base.move(10,20);
+    chain.spin(-20);
+    wait(500,msec);
+    base.move(-10,20);
+    chain.stop(coast);
+    base.turn(-130,40);
+    belt.spin(100);
+    base.move(10,40);
+    base.move(-10,40);
+    base.turn(0,50);
+    base.move(48,75);
+    base.turn(90,40);
+    chain.lift(80);
+    hang.open();
+    base.move(20,30);
+    chain.spin(-40);
+    wait(200,msec);
+    base.move(-24,40);
+   std::cout << Timer1.time(msec) << std::endl;
   }
   //Auton 2, hook Bot
   if (auton == 2){
- 
+
+    base.turn(90,50);
+    wait(200,msec);
+    base.turn(0,50);
+
   }
-  //Auton 3, hook Bot
+  //Auton 3, hook Bot Skills
   if (auton == 3){
-    
+    Gyro.setRotation(50,deg);
+    base.move(-40,40);
+    choo.lift(100);
+    base.turn(0,50);
+    belt.spin(100);
+    base.move(24,50);
+    wait(200,msec);
+    base.move(-24,50);
+    base.turn(180,50);
+    base.move(24,50);
+    wait(200,msec);
+    base.move(-24,50);
+    base.turn(170,50);
+    base.move(-34,50);
+
   }
-  //Auton 4, hook Bot
+  //Auton 4, hook Bot HS 2 Ring
   if (auton == 4){
-    
+    base.move(-24,30);
+    choo.lift(100);
+    base.turn(-90);
+    belt.spin(100);
+    base.move(24);
+    base.turn(90);
+    base.spin(60);
+    wait(2000,msec);
+    base.stop(brake);
   }
-  //Auton 5, hook Bot
+  //Auton 5, hook Bot HS MultiRing Left
   if (auton == 5){
 
   }
@@ -117,23 +197,58 @@ void autonomous(void) {
   if (auton == 7){
 
   }
-  //Auton 1, Push Bot
+  //Auton 1, Push Bot Main Auton
   if (auton == 8){
-    
+    Gyro.setRotation(-69,deg);
+    clamp.close();
+    belt.spin(100);
+    base.move(-62,100);
+    belt.stop();
+    clamp.open();
+    base.move(12,40);
+    clamp.close();
+    base.turn(0,40);
+    base.move(32,50);
+    base.turn(-135,40);
+    base.move(-12,20);
+    clamp.open();
+    base.move(12,40);
+    base.turn(-90,40);
+    base.move(36,50);
+    base.turn(-180,50);
+    base.move(36,50);
+    belt.spin(100);
+    wait(1,sec);
+    belt.stop();
+    base.move(-100,100);
+    clamp.open();
+    base.turn(-225,40);
+    hang.open();
+    base.spin(40);
+    waitUntil(Gyro.pitch(deg) > 15);
+    hang.close();
   }
-   //Auton 2, Push Bot
+   //Auton 2, Push Bot PID Tuning
   if (auton == 9){
     
   }
-   //Auton 3, Push Bot
+   //Auton 3, Push Bot Skills
   if (auton == 10){
     
   }
-   //Auton 4, Push Bot
+   //Auton 4, Hook bot HS 2 Ring
   if (auton == 11){
-    
+    base.move(-24,30);
+    choo.lift(100);
+    base.turn(-90);
+    belt.spin(100);
+    base.move(24);
+    base.turn(90);
+    base.spin(60);
+    wait(2,sec);
+    base.stop(brake);
   }
-   //Auton 5, Push Bot
+   //Auton 5, Hook bot HS MultiRing
   if (auton == 12){
     
   }
@@ -152,7 +267,7 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
-
+bool togglehang = false;
 void usercontrol(void) {
   // User control code here, inside the loop
   task driver(Drive);
@@ -160,15 +275,32 @@ void usercontrol(void) {
   task chaine(chainBarControl);
   task Ringer(ringBeltControl);
   task infoscreen(ControllerScreen);
+  task linker(vexLink);
   while (1) {
-    // This is the main execution loop for the user control program.
-    // Each time through the loop your program should update motor + servo
-    // values based on feedback from the joysticks.
+        Brain.Screen.printAt( 20, 190, true, "%d Link: %s", status, linkA.isLinked() ? "ok" : "--" );
+    if(Controller1.ButtonUp.pressing() && !togglehang && status == linkType::worker){
+            hang.open();
+            togglehang = 1;
+            waitUntil(!Controller1.ButtonUp.pressing());
+        }
+        //pto shift close button
+        else if(Controller1.ButtonUp.pressing() && togglehang && status == linkType::worker){
+            hang.close();
+            togglehang = 0;
+            waitUntil(!Controller1.ButtonUp.pressing());
+        }
+         if(Controller1.ButtonRight.pressing() && !togglehang && status == linkType::manager){
+            doink.open();
+            togglehang = 1;
+            waitUntil(!Controller1.ButtonRight.pressing());
+        }
+        //pto shift close button
+        else if(Controller1.ButtonRight.pressing() && togglehang && status == linkType::manager){
+            doink.close();
+            togglehang = 0;
+            waitUntil(!Controller1.ButtonRight.pressing());
+        }
 
-    // ........................................................................
-    // Insert user code here. This is where you use the joystick values to
-    // update your motors, etc.
-    // ........................................................................
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
@@ -208,6 +340,9 @@ int main() {
         wait(10,msec);
         rSideRail.set( data, 0, rSideRail.max(), 0 );
         wait(10,msec);
+    logtoSDCard("test");
+    logtoSDCard("test");
+
 
 
   // Prevent main from exiting with an infinite loop.

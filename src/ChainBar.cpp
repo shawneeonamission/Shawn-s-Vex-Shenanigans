@@ -4,6 +4,7 @@
 #include "GoalLift.h"
 #include "AutonSelection.h"
 #include <iostream>
+#include <thread>
 
 //declare the namespace you created
 using namespace S;
@@ -25,50 +26,45 @@ void ringBar::stop(brakeType type){
 
 void ringBar::lift(double angle){
     spin(100);
-    waitUntil(chainRot.position(deg) > angle - 135);
+    waitUntil(chainRot.position(deg) > angle);
     stop(hold);
+}
+// New function to lift the chain bar using an instance
+int liftTaskFunction(void* param) {
+    double* myParam = static_cast<double*>(param);
+    double angle = *myParam;
+    // Call the lift function on the ringBar instance
+    chain.lift(angle);
+    return 0; // End of task
+}
+// Updated startLift function
+void ringBar::startLift(double angle) {
+    task liftTask(liftTaskFunction, &angle); // Start the task
 }
 
 
 int chainState = 0;
-int staketoggle = 0;
+
 
 int chainBarControl(){
+    chainRot.resetPosition();
     while(true){
-        if(!staketoggle){
-            if(Controller1.ButtonR1.pressing() && chainState != 1){
-            chain.spin(100);
-            chainState = 1;
-            waitUntil(!(Controller1.ButtonR1.pressing()));
-        }
-        else if(Controller1.ButtonR2.pressing() && chainState != 2){
-            chain.spin(-100);
-            waitUntil(!(Controller1.ButtonR2.pressing()));
-            if(chainState == 1){
-                chain.spin(100);
-            }
-            else{
-                chain.stop();
-            }
-        }
-        else if(((Controller1.ButtonR1.pressing()  && driverCount == 1) || (Controller1.ButtonL1.pressing()  && driverCount == 2)) && chainState == 1){
-            chain.stop();
-            chainState = 0;
-            waitUntil(!(Controller1.ButtonR1.pressing()) && !(Controller1.ButtonL1.pressing()));
-        }
-        }
         
-        else {
-            if(Controller1.ButtonR1.pressing()){
-                chain.lift(90);
+            if(Controller1.ButtonR1.pressing() && status == linkType::manager){
+                chain.lift(95);
+                hang.open();
                 waitUntil(!(Controller1.ButtonR1.pressing()));
                 
             }
-            else if(Controller1.ButtonR2.pressing()){
-                chain.stop(coast);
+            else if(Controller1.ButtonR2.pressing() && status == linkType::manager){
+                chain.spin(-50);
+                hang.close();
                 waitUntil(!(Controller1.ButtonR2.pressing()));
+                chain.stop(coast);
+                
             }
-        }
+       
+        
         //Shift Key
         while(Controller1.ButtonB.pressing()){
         if(Controller1.ButtonL1.pressing()){
@@ -82,18 +78,7 @@ int chainBarControl(){
         else{
             chain.stop(hold);
         }
-        //pto shift open button
-        if(Controller1.ButtonLeft.pressing() && !staketoggle){
-            shift.open();
-            staketoggle = 1;
-            waitUntil(!Controller1.ButtonLeft.pressing());
-        }
-        //pto shift close button
-        else if(Controller1.ButtonLeft.pressing() && staketoggle){
-            shift.close();
-            staketoggle = 0;
-            waitUntil(!Controller1.ButtonLeft.pressing());
-        }
+        
         }
 
        

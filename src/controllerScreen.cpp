@@ -13,9 +13,9 @@ int ControllerScreen()
     Controller1.Screen.setCursor(1,0);
     Controller1.Screen.print("Ferris %3.0f Air %.0f", goalLift.temperature(fahrenheit),tankPressure);
     Controller1.Screen.setCursor(2,0);
-    Controller1.Screen.print("Chain %3.0f", chainBar.temperature(fahrenheit));
+    Controller1.Screen.print("Chain %3.0f Belt %3.0f", chainBar.temperature(fahrenheit), ringBelt.temperature(fahrenheit));
     Controller1.Screen.setCursor(3,0);
     Controller1.Screen.print("L %3.0f R %3.0f", LDrive.temperature(fahrenheit), RDrive.temperature(fahrenheit));
-    wait(10,msec);
+    wait(20,msec);
   }
 }

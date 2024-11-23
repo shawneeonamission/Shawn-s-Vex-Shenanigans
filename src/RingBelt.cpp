@@ -16,36 +16,79 @@ void hooks::spin(float prct){
 }
 
 void hooks::stop(){
-    chainBar.stop(brake);
+    ringBelt.stop(brake);
 }
 void hooks::stop(brakeType type){
-    chainBar.stop(type);
+    ringBelt.stop(type);
 }
 
 int beltState = 0;
 
 int ringBeltControl(){
+    ringColor.setLightPower(50,pct);
+    ringColor.setLight(ledState::on);
+
     while(true){
-        
-        if(Controller1.ButtonR1.pressing() && beltState != 1){
-            belt.spin(100);
-            beltState = 1;
-            waitUntil(!(Controller1.ButtonR1.pressing()));
-        }
-        else if(Controller1.ButtonR2.pressing() && beltState != 2){
-            belt.spin(-100);
-            waitUntil(!(Controller1.ButtonR2.pressing()));
-            if(beltState == 1){
+        if(status == linkType::manager){
+            if(Controller1.ButtonL1.pressing() && beltState == 0){
                 belt.spin(100);
+                beltState = 1;
+                waitUntil(!(Controller1.ButtonL1.pressing()));
             }
-            else{
+            else if(Controller1.ButtonL2.pressing()){
+                belt.spin(-50);
+                waitUntil(!(Controller1.ButtonL2.pressing()));
                 belt.stop();
+                beltState = 0;
+            }
+            else if(Controller1.ButtonL1.pressing() && beltState == 1){
+                belt.stop();
+                beltState = 0;
+                waitUntil(!(Controller1.ButtonL1.pressing()));
             }
         }
-        else if(((Controller1.ButtonR1.pressing()  && driverCount == 1) || (Controller1.ButtonL1.pressing()  && driverCount == 2)) && beltState == 1){
-            belt.stop();
-            beltState = 0;
-            waitUntil(!(Controller1.ButtonR1.pressing()) && !(Controller1.ButtonL1.pressing()));
+        else{
+            if(Controller1.ButtonL1.pressing() && beltState == 0){
+                belt.spin(10);
+                beltState = 1;
+                waitUntil(!(Controller1.ButtonL1.pressing()));
+            }
+            else if(Controller1.ButtonL2.pressing()){
+                belt.spin(-50);
+                waitUntil(!(Controller1.ButtonL2.pressing()));
+                belt.stop();
+                beltState = 0;
+            }
+            else if(Controller1.ButtonL1.pressing() && beltState == 1){
+                belt.spin(100);
+                
+                waitUntil(!(Controller1.ButtonL1.pressing()));
+                belt.spin(10);
+            }
+        }
+        if(beltState == 1 && ringBelt.velocity(rpm) < 5){
+            belt.spin(-50);
+            wait(500,msec);
+            belt.spin(status == linkType::manager ? 100 : 10);
+            wait(200,msec);
+        }
+        //load thingy
+        if(Controller1.ButtonLeft.pressing() && beltState == 1){
+            
+            belt.spin(50);
+            while(!ringColor.isNearObject()){
+                if(beltState == 1 && ringBelt.velocity(rpm) < 5){
+                    belt.spin(-50);
+                    wait(500,msec);
+                    belt.spin(50);
+                }   
+                wait(5,msec);
+            }
+            belt.spin(10);
+            waitUntil(!ringColor.isNearObject());
+            belt.spin(-25);
+            wait(1,sec);
+            belt.spin(100);
         }
         //Shift Key
         while(Controller1.ButtonB.pressing()){

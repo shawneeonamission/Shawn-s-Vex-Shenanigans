@@ -28,10 +28,12 @@ rotation perpendicularTrackingWheel = rotation(PORT6);
 
 motor chainBar = motor(PORT9,ratio36_1);
 
-motor lRingBelt(PORT10,ratio18_1,true);
-motor rRingBelt(PORT1,ratio18_1);
+motor lRingBelt(PORT1,ratio18_1,true);
+motor rRingBelt(PORT10,ratio18_1);
 
 motor_group ringBelt(rRingBelt,lRingBelt);
+
+optical ringColor(PORT2);
 
 motor lLift = motor(PORT15,ratio36_1);
 motor rLift = motor(PORT16,ratio36_1,true);
@@ -40,15 +42,15 @@ motor_group goalLift = motor_group(lLift,rLift);
 
 rotation chainRot(PORT4);
 
-pneumatics shift(Brain.ThreeWirePort.A);
-pneumatics paddle(Brain.ThreeWirePort.B);
-pneumatics clamp(Brain.ThreeWirePort.C);
 
+
+pneumatics clamp(Brain.ThreeWirePort.A);
+pneumatics doink(Brain.ThreeWirePort.B);
+pneumatics hang(Brain.ThreeWirePort.C);
+pneumatics intakeLift(Brain.ThreeWirePort.D);
 analog_in airPressure(Brain.ThreeWirePort.E);
-
 RGB lSideRail(vex::triport(PORT22).F, 56 );
 RGB rSideRail(vex::triport(PORT22).G, 56 );
-
-aivision aiVision(PORT10);
+pneumatics lock(Brain.ThreeWirePort.H);
 linkType status = chainRot.installed()?linkType::manager : linkType::worker;
 serial_link linkA(PORT3,"INTRT_In_Transit_Robotics",status);

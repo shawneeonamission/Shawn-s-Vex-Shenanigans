@@ -29,7 +29,7 @@ namespace S{
 
 }
 
-extern S::liftgoal ferriswheel;
+extern S::liftgoal choo;
 //this finished the #ifndef condition
 //put all code between these 
 #endif

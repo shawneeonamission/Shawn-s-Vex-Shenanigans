@@ -70,36 +70,48 @@ int FerrisWheel(){
         
         if(Controller1.ButtonDown.pressing() && toggleferris == 0){
             
-            ferriswheel.lift(100);
+            choo.lift(100);
             toggleferris = 1;
             waitUntil(!Controller1.ButtonB.pressing());
-            std::cout << "test2: " << ferriswheel.angle() << std::endl;
+            std::cout << "test2: " << choo.angle() << std::endl;
         }
         else if(Controller1.ButtonDown.pressing() && toggleferris){
             
-            ferriswheel.lower(100);
+            choo.lower(100);
             toggleferris = 0;
             waitUntil(!Controller1.ButtonB.pressing());
-            std::cout << "test3: " << ferriswheel.angle() << std::endl;
+            std::cout << "test3: " << choo.angle() << std::endl;
         }
         else{
-            ferriswheel.stop(brake);
+            choo.stop(brake);
+        }
+         //pto shift open button
+        if(Controller1.ButtonR1.pressing() && !toggleferris && status == linkType::worker){
+            clamp.open();
+            toggleferris = 1;
+            waitUntil(!Controller1.ButtonR1.pressing());
+        }
+        //pto shift close button
+        else if(Controller1.ButtonR1.pressing() && toggleferris && status == linkType::worker){
+            clamp.close();
+            toggleferris = 0;
+            waitUntil(!Controller1.ButtonR1.pressing());
         }
 
         //Shift Button
         while(Controller1.ButtonB.pressing()){
             if(Controller1.ButtonR1.pressing()){
 
-                ferriswheel.spin(50);
+                choo.spin(50);
                 waitUntil(!Controller1.ButtonR1.pressing());
             }
             else if(Controller1.ButtonR2.pressing()){
 
-                ferriswheel.spin(-50);
+                choo.spin(-50);
                 waitUntil(!Controller1.ButtonR2.pressing());
             }
             else{
-                ferriswheel.stop(brake);
+                choo.stop(brake);
             }
             if(Controller1.ButtonA.pressing()){
                 goalLift.resetPosition();

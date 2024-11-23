@@ -84,8 +84,8 @@ void rx_handler( uint8_t *buffer, int32_t length ) {
 int vexLink(){
     
     while(true){
-        Brain.Screen.clearScreen();
-        Brain.Screen.printAt( 20, 190, true, "%d Link: %s", status, linkA.isLinked() ? "ok" : "--" );
+        
+        
         if(linkA.isLinked()){
             if(status == linkType::manager){
                 if(linkA.isReceiving()){
