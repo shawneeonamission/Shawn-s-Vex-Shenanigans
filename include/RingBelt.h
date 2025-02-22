@@ -6,6 +6,7 @@ extern int intoggle;
 extern int ringBeltControl();
 extern int inSped;
 extern int outSped;
+extern int load;
 
 //define a namespace
 namespace S{
@@ -17,9 +18,12 @@ namespace S{
     public:
       //declare functions to use within class
       void spin(float prct);
+      void spinFor(double rotation, rotationUnits units, double pwr);
+      void spinFor(double time, timeUnits units, double pwr);
       void stop();
       void stop(brakeType type);
       void lift(double angle);
+      void loadThingy();
   };
 
 }

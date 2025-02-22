@@ -54,9 +54,9 @@ int auton = 1;
 
 short BotCount = 0;
 
-int rob = 0;
+int rob = 1;
 
-uint8_t     myTestData[ 1000 ];
+
 uint8_t     myReadBuffer[ 1000 ];
 
 std::array<unsigned char,100> convertToASCII(std::string s)
@@ -71,12 +71,14 @@ std::array<unsigned char,100> convertToASCII(std::string s)
 void logtoSDCard(std::string s)
 {
   std::array<unsigned char,100> t = convertToASCII(s);
+  uint8_t     myTestData[ s.length() ];
   for(int i=0; i < s.length(); i++)
   {
     
     myTestData[i] = t[i];
   }
-  myTestData[s.length() + 1] = 0x0A;
+  myTestData[s.length()] = 0x0A;
+
         
   //use your object and function
   if(!Brain.SDcard.exists("data_logging/testdatalogging.txt")){
@@ -88,6 +90,10 @@ void logtoSDCard(std::string s)
 }
 
 void pre_auton(void) {
+  if(!chainRot.installed()){
+    intakeLift.open();
+  }
+  
   if(Competition.isCompetitionSwitch()){
     std::cout << "Comp Switch" << std::endl;
   testing = true;
@@ -105,6 +111,24 @@ void pre_auton(void) {
   // Example: clearing encoders, setting servo positions, ...
 }
 
+int test = 0;
+int autoLoad(){
+  
+  test = 0;
+  belt.spin(75);
+  waitUntil(ringColor.isNearObject());
+    belt.stop();
+    wait(200,msec);
+    belt.loadThingy();
+    test = 1;
+  return 0;
+}
+int autoHold(){
+    belt.spin(100);
+    waitUntil(ringColor.isNearObject());
+    belt.stop();
+  return 0;
+}
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*                              Autonomous Task                              */
@@ -116,67 +140,162 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
+
+
   chainRot.resetPosition();
+  chainBar.resetPosition();
   Timer1.clear();
-  //Auton 1, Hook Bot
+  ringColor.setLightPower(50,pct);
+  ringColor.setLight(ledState::on);
+  //Auton 1, Big Bot
   if (auton == 1){
-    Gyro.setRotation(-33,deg);
+    Gyro.setRotation(-22,deg);
     
-    base.move(-18,20);
-    chain.lift(60);
-    hang.open();
-    choo.lift(100);
-    base.turn(-92,40);
-    base.move(10,20);
-    chain.spin(-20);
+    base.move(40,20);
+    doink.open();
+    wait(200,msec);
+    base.move(-18,100);
+    doink.close();
+    wait(200,msec);
+    base.turn(125,50);
+    //Get the goal or not
+    if(goalDie.objectDistance(mm) < 400){
+      base.spin(-30);
+      waitUntil(goalDie.objectDistance(mm) < 75);
+      clamp.open();
+      base.stop();
+      messageToSend = "Got Goal";
+      
+      base.turn(180,50);
+      belt.spin(100);
+      base.move(40,50);
+      base.turn(260,50);
+      
+      
+
+
+    }
+    else{
+      base.move(8,50);
+      base.turn(40,50);
+      base.move(20,50);
+      doink.open();
+      wait(200,msec);
+      base.move(-18,100);
+    doink.close();
+    wait(200,msec);
+    base.turn(-135,50);
+    //Get second goal or not
+    if(goalDie.objectDistance(mm) < 400){
+      base.spin(-40);
+      waitUntil(goalDie.objectDistance(mm) < 75);
+      clamp.open();
+      messageToSend = "Got Goal";
+    }
+    else{
+      messageToSend = "No Goal";
+    }
+
+    }
+    
+    doink.open();
+      base.move(8,20);
+      belt.stop();
+      base.turn(270,50);
+      doink.open();
+      belt.spin(100);
+      base.move(2,50);
+   std::cout << Timer1.time(msec) << std::endl;
+  }
+  //Auton 2, Big Bot Testing
+  if (auton == 2){
+
+    base.turnToRing(100);
+
+  }
+  //Auton 3, Big Bot Skills
+  if (auton == 3){
+    Gyro.setRotation(0,deg);
+    
+    base.move(-24,40);
+    wait(200,msec);
+    base.turn(-45,50);
+    base.spin(-20);
+    waitUntil(goalDie.objectDistance(mm) < 65);
+
+    clamp.open();
+    wait(200,msec);
+    base.stop();
+    wait(200,msec);
+    base.turn(-180,50);
+    belt.spin(100);
+    base.move(24,50);
+    wait(200,msec);
+    base.move(-24,50);
+    base.turn(-90,50);
+    base.move(24,50);
+    wait(200,msec);
+    base.move(-24,50);
+    base.turn(0,50);
+    base.move(24,50);
+    base.turn(45,50);
+    doink.open();
+    base.move(34,50);
+    
+    wait(400,msec);
+    base.turn(90,50);
+     doink.close();
+     wait(200,msec);
+     base.spin(40);
+     wait(600,msec);
+     base.move(-4,50);
+     base.turn(225,50);
+    base.spin(-40);
+    wait(600,msec);
+    base.stop();
+    belt.stop();
+    clamp.close();
+    base.move(16,50);
+    base.turn(180,50);
+    task asduiafsas(autoHold);
+    base.move(69,50);
+    base.turn(270,50);
+    base.move(-24,50);
+    clamp.open();
+    wait(200,msec);
+    base.turn(180,50);
+    belt.spin(100);
+    base.move(24,50);
+    wait(200,msec);
+    base.turn(270,50);
+    base.move(24,50);
+    wait(400,msec);
+    base.turn(315,50);
+    belt.stop();
+    clamp.close();
+    base.spin(-50);
+    wait(2000,msec);
+    base.move(12,50);
+    base.turn(360,50);
+    task asfhiusdfhsidf(autoLoad);
+    base.move(54,50);
+    waitUntil(test == 1);
+    chain.spin(100);
+    intakeLift.open();
+    base.turn(450,50);
+    base.spin(40);
+    wait(800,msec);
+    chain.spin(-40);
+    intakeLift.close();
     wait(500,msec);
     base.move(-10,20);
     chain.stop(coast);
-    base.turn(-130,40);
-    belt.spin(100);
-    base.move(10,40);
-    base.move(-10,40);
-    base.turn(0,50);
-    base.move(48,75);
-    base.turn(90,40);
-    chain.lift(80);
-    hang.open();
-    base.move(20,30);
-    chain.spin(-40);
-    wait(200,msec);
-    base.move(-24,40);
-   std::cout << Timer1.time(msec) << std::endl;
-  }
-  //Auton 2, hook Bot
-  if (auton == 2){
-
-    base.turn(90,50);
-    wait(200,msec);
-    base.turn(0,50);
 
   }
-  //Auton 3, hook Bot Skills
-  if (auton == 3){
-    Gyro.setRotation(50,deg);
-    base.move(-40,40);
-    choo.lift(100);
-    base.turn(0,50);
-    belt.spin(100);
-    base.move(24,50);
-    wait(200,msec);
-    base.move(-24,50);
-    base.turn(180,50);
-    base.move(24,50);
-    wait(200,msec);
-    base.move(-24,50);
-    base.turn(170,50);
-    base.move(-34,50);
-
-  }
-  //Auton 4, hook Bot HS 2 Ring
+  //Auton 4, Big Bot HS 2 Ring
   if (auton == 4){
     base.move(-24,30);
-    choo.lift(100);
+    clamp.open();
     base.turn(-90);
     belt.spin(100);
     base.move(24);
@@ -185,29 +304,113 @@ void autonomous(void) {
     wait(2000,msec);
     base.stop(brake);
   }
-  //Auton 5, hook Bot HS MultiRing Left
+  //Auton 5, Big Bot HS MultiRing 
   if (auton == 5){
-
+    base.move(-24,50);
+    clamp.open();
+    base.turn(-90);
+    belt.spin(100);
+    base.move(24,50);
+    base.move(-24,50);
+    base.turn(-150,50);
+    base.spin(10,50);
+    waitUntil(Gyro.rotation(deg) > -90);
+    base.move(12,50);
+    base.move(-24,50);
   }
-  //Auton 6, hook Bot
+  //Auton 6, Big Bot MultiStake
   if (auton == 6){
-    
+    chain.lift(20);
+    intakeLift.open();
+    base.move(4,20);
+    intakeLift.close();
+    belt.spin(60);
+    waitUntil(ringColor.isNearObject());
+    belt.stop(coast);
+    base.move(8,50);
+    base.turn(-90,50);
+    base.move(9,20);
+    chain.spin(-40);
+    hang.close();
+    wait(500,msec);
+    base.move(-10,20);
+    base.turn(-45,50);
+    base.move(-24,50);
+    clamp.close();
+    wait(400,msec);
+    base.turn(-180,50);
+    belt.spin(100);
+    base.move(24,50);
+    base.move(-40,30);
   }
+  chain.lift(80);
   //Secret, Do Nothing Push Bot
   if (auton == 7){
 
   }
-  //Auton 1, Push Bot Main Auton
+  //Auton 1, Smol Bot Main Auton
   if (auton == 8){
-    Gyro.setRotation(-69,deg);
+
+    if(rob == 1){
+      base.strafe(12,20);
+      base.spin(-10);
+      wait(200,msec);
+      belt.spinFor(725,deg,100);
+      base.move(16,50);
+      base.move(-10,50);
+      base.turn(180,50);
+      base.move(-16,50);
+      clamp.open();
+      
+      intakeLift.close();
+      base.turn(220,50);
+      belt.spin(100);
+      base.move(16,50);
+      base.move(-4,50);
+      base.turn(92,50);
+      base.move(52,50);
+      base.turn(0,50);
+      belt.stop();
+      intakeLift.open();
+      base.move(10,20);
+      intakeLift.close();
+      wait(200,msec);
+      belt.spin(100);
+      wait(800,msec);
+      intakeLift.open();
+      waitUntil(messageRecieved);
+      if(recievedMessage == "Got Goal"){
+      base.strafe(28,50);
+      clamp.close();
+      base.turn(135,50);
+      base.spin(-40);
+      wait(1400,msec);
+      chain.spin(-100);
+      waitUntil(chainBar.position(deg) < 5);
+      hang.open();
+      base.spin(10);
+      }else if(recievedMessage == "No Goal"){
+        base.move(-24,50);
+        base.turn(92,50);
+        base.move(-96,50);
+        base.strafe(-14,20);
+        base.spin(-40);
+        clamp.close();
+        wait(1000,msec);
+        base.stop();
+      }
+    }
+   /*Gyro.setRotation(0,deg);
     clamp.close();
-    belt.spin(100);
-    base.move(-62,100);
+    
+    base.move(-44.5,40);
     belt.stop();
     clamp.open();
-    base.move(12,40);
+    belt.spin(80);
+    base.move(24,40);
+    belt.spin(-40);
     clamp.close();
-    base.turn(0,40);
+    base.turn2(100,40);
     base.move(32,50);
     base.turn(-135,40);
     base.move(-12,20);
@@ -225,36 +428,248 @@ void autonomous(void) {
     base.turn(-225,40);
     hang.open();
     base.spin(40);
-    waitUntil(Gyro.pitch(deg) > 15);
+    waitUntil(Timer1.time(msec) > 28000);
+    hang.close();*/
+  }
+   //Auton 2, Smol Bot Testing
+  if (auton == 9){
+    hang.open();
+    base.spin(20);
+    waitUntil(!Competition.isEnabled());
     hang.close();
   }
-   //Auton 2, Push Bot PID Tuning
-  if (auton == 9){
-    
-  }
-   //Auton 3, Push Bot Skills
+   //Auton 3, Smol Bot Skills
   if (auton == 10){
+    //Pick up ring
+    intakeLift.close();
+    wait(400,msec);
+    belt.spinFor(725,deg,100);
+    //backup to alliance stake
+    base.spin(-20);
+    wait(600,msec);
+    base.stop();
+    //score on alliance stake
+    belt.spinFor(725,deg,100);
+    //drive forward to tile grid
+    base.move(12,50);
+    //strafe over one tile
+    base.strafe(24,50);
+    //turn toward goal
+    base.turn(135,50);
+    //back up to goal
+    base.move(-34,50);
+    //clamp goal
+    clamp.open();
+    //turn to first ring
+    base.turn(0,50);
+    //Pick up ring
+    belt.spin(100);
+    base.move(24,50);
+    //back up to other ring
+    base.move(-24,50);
+    //turn to next ring
+    base.turn(90,50);
+    //pick up next ring
+    base.move(24,50);
+    base.move(-24,50);
+    //pick up third ring
+    base.turn(180,50);
+    base.move(24,50);
+    //turn toward corner
+    base.turn(225,50);
+    //drive into corner
+    base.spin(50);
+    wait(600,msec);
+    base.stop();
+    //place goal in corner
+    base.move(-4,50);
+    base.turn(45,50);
+    belt.stop();
+    base.spin(-25);
+    wait(600,msec);
+    base.stop();
+    clamp.close();
+    //drive to next ring
+    base.move(2,50);
+    base.turn(0,50);
+    base.move(52,50);
+    //Pick up next ring
+    belt.spinFor(725,deg,100);
+    //pick up next goal
+    base.strafe(-12,50);
+    base.turn(-135,50);
+    base.move(-34,50);
+    clamp.open();
+    wait(200,msec);
+    //Pick up next ring
+    base.turn(-90,50);
+    belt.spin(100);
+    base.move(24,50);
+    base.move(-24,50);
+    //Pick up 3rd ring
+    base.turn(0,50);
+    base.move(24,50);
+    //pick up 4th ring
+    base.turn(-90,50);
+    base.move(24,50);
+    //pick up ring in corner
+    base.turn(-45,50);
+    base.spin(50);
+    wait(600,msec);
+    base.stop();
+    //place goal in corner
+    base.move(-4,50);
+    base.turn(135,50);
+    belt.stop();
+    base.spin(-25);
+    wait(600,msec);
+    base.stop();
+    clamp.close();
+    //blue alliance stake
+    base.move(2,100);
+    base.turn(90,50);
+    base.move(52,50);
+    belt.spinFor(725,deg,100);
+    base.turn(180,50);
+    //backup to alliance stake
+    base.spin(-20);
+    wait(600,msec);
+    base.stop();
+    //score on alliance stake
+    belt.spinFor(725,deg,100);
+    //hang
+    base.strafe(-24,50);
+    base.move(36,50);
+    base.turn(135,50);
+    hang.open();
+    base.spin(20);
+    waitUntil(!Competition.isEnabled());
+    hang.close();
+
+
     
   }
-   //Auton 4, Hook bot HS 2 Ring
+   //Auton 4, Smol bot HS 2 Ring
   if (auton == 11){
-    base.move(-24,30);
-    choo.lift(100);
-    base.turn(-90);
+    //Red
+    if(rob < 2){
+    base.strafe(-44,50);
+    base.move(-4,100);
+    clamp.open();
+    intakeLift.close();
+    wait(200,msec);
     belt.spin(100);
-    base.move(24);
-    base.turn(90);
+    base.move(12,50);
+    base.turn(-180,50);
     base.spin(60);
     wait(2,sec);
     base.stop(brake);
+    }
+    //Blue
+    else if(rob == 2){
+    base.strafe(38,50);
+    base.move(-4,100);
+    clamp.open();
+    wait(200,msec);
+    belt.spin(100);
+    base.move(12,50);
+    base.turn(-180,50);
+    base.spin(60);
+    wait(2,sec);
+    base.stop(brake);
+    }
   }
-   //Auton 5, Hook bot HS MultiRing
+   //Auton 5, Smol bot HS MultiRing
   if (auton == 12){
-    
+    //Red
+    if(rob < 2){
+     base.strafe(38,50);
+    base.move(-4,100);
+    clamp.open();
+    wait(200,msec);
+    belt.spin(100);
+    base.move(12,50);
+    base.move(-4,50);
+    base.turn(-90,50);
+    base.move(12,50);
+    base.strafe(-6,50);
+    base.move(-24,50);
+    base.turn(-180,50);
+    base.spin(60);
+    wait(3,sec);
+    base.stop(brake);
+    }
+    //Blue
+    else if(rob == 2){
+     base.strafe(-38,50);
+    base.move(-4,100);
+    clamp.open();
+    wait(200,msec);
+    belt.spin(100);
+    base.move(12,50);
+    base.move(-4,50);
+    base.turn(90,50);
+    base.move(12,50);
+    base.strafe(-6,50);
+    base.move(-24,50);
+    base.turn(180,50);
+    base.spin(60);
+    wait(3,sec);
+    base.stop(brake);
+    }
   }
-    //Auton 6, Push Bot
-  if (auton == 12){
-    
+    //Auton 6, Smol Bot HS Alliance Stake
+  if (auton == 13){
+    if(rob < 2){
+    base.strafe(-11.875,20);
+    base.spin(-20);
+    wait(400,msec);
+    belt.spinFor(725,deg,100);
+    intakeLift.open();
+    base.move(6,20);
+    intakeLift.close();
+    wait(200,msec);
+    belt.spinFor(725,deg,100);
+    intakeLift.open();
+    base.strafe(42,50);
+    base.turn(-90,50);
+    wait(200,msec);
+    base.strafe(-32,50);
+    base.move(-4,100);
+    clamp.open();
+    wait(200,msec);
+    belt.spin(100);
+    base.move(12,50);
+    base.turn(-180,50);
+    base.spin(60);
+    wait(2,sec);
+    base.stop(brake);
+    }
+    else if(rob == 2){
+    base.strafe(7.375,20);
+    base.spin(-20);
+    wait(400,msec);
+    belt.spinFor(725,deg,100);
+    intakeLift.open();
+    base.move(6,20);
+    intakeLift.close();
+    wait(200,msec);
+    belt.spinFor(725,deg,100);
+    intakeLift.open();
+    base.strafe(-36,50);
+    base.turn(90,50);
+    wait(200,msec);
+    base.strafe(32,50);
+    base.move(-4,100);
+    clamp.open();
+    wait(200,msec);
+    belt.spin(100);
+    base.move(12,50);
+    base.turn(180,50);
+    base.spin(60);
+    wait(2,sec);
+    base.stop(brake);
+    }
   }
 }
 
@@ -277,7 +692,9 @@ void usercontrol(void) {
   task infoscreen(ControllerScreen);
   task linker(vexLink);
   while (1) {
+    
         Brain.Screen.printAt( 20, 190, true, "%d Link: %s", status, linkA.isLinked() ? "ok" : "--" );
+        Brain.Screen.printAt(20,210,"chainState: %d", chainState);
     if(Controller1.ButtonUp.pressing() && !togglehang && status == linkType::worker){
             hang.open();
             togglehang = 1;
@@ -311,7 +728,9 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 int main() {
- 
+    if(status == linkType::worker){
+      
+    }
 
     // set all led black
     // probably need some initial delay, TBD
@@ -340,8 +759,7 @@ int main() {
         wait(10,msec);
         rSideRail.set( data, 0, rSideRail.max(), 0 );
         wait(10,msec);
-    logtoSDCard("test");
-    logtoSDCard("test");
+    logtoSDCard("testee");
 
 
 

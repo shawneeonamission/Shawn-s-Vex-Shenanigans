@@ -60,6 +60,12 @@ void drive::spin(float leftpower,float rightpower){
     RDrive.spin(directionType::fwd,rightpower,pct);
     LDrive.spin(directionType::fwd,leftpower,pct);
 }
+void drive::spin(float leftfront, float leftrear, float rightfront,float rightrear){
+    RFDrive.spin(fwd,rightfront,pct);
+    RRDrive.spin(fwd,rightrear,pct);
+    LFDrive.spin(fwd,leftfront,pct);
+    LRDrive.spin(fwd,leftrear,pct);
+}
 
 double drive::joystickCurve(double joystickValue){
     return exp(((abs(joystickValue) - 100) * joystickCurveValue) / 1000) * joystickValue;
@@ -90,7 +96,7 @@ void drive::move(double dist, double maxPwr){
 
   while(true){
 
-    currentDist = (((LDrive.position(rev) + RDrive.position(rev))/2) * (0.6)) * (3.25 * pi);
+    currentDist = status == linkType::manager ?(((LDrive.position(rev) + RDrive.position(rev))/2) * (0.6)) * (3.25 * pi) : ((LDrive.position(rev) + RDrive.position(rev))/2) * (1.8 * pi);
 
     //calculate the P
     P = driveTarget - currentDist;
@@ -140,6 +146,27 @@ void drive::move(double dist){
   move(dist,100);
 }
 
+int driveTask(void* distpwr){
+  double dis = *(double*)distpwr;
+  //double pr = *(double*)pwr;
+  base.move(dis);
+  return 0;
+}
+
+void drive::move(double dist, double maxPwr, bool waitForCompletion){
+  if(waitForCompletion){
+    move(dist,maxPwr);
+  }
+  else{
+    double distandpwr[] = {dist,maxPwr};
+    task myTask(driveTask, &distandpwr);
+  }
+}
+
+void drive::moveToRing(int rob, double maxPwr){
+
+  
+}
 
 //Function that uses a PID loop to turn the robot to a specified angle at a specified maximum power
 void drive::turn(double angle, double maxPwr){
@@ -253,7 +280,7 @@ void drive::turn2(double angle, double maxPwr){
       pwr = fabs(total);
     }
     //check if turning left
-    if(P < 0){
+    if(P < 0 ^ status == linkType::worker){
       pwr = -1*pwr;
     }
     //set motors to spin
@@ -274,6 +301,131 @@ void drive::turn2(double angle, double maxPwr){
 //stop the drive
 stop(brake);
 
+}
+
+//Function that uses a PID loop to turn the robot to a specified angle at a specified maximum power
+void drive::turn3(double angle, double maxPwr){
+    Gyro.resetRotation();
+     //set and initalize variables
+  float lastError = 0;
+  float P = 0;
+  float I = 0;
+  float D = 0;
+
+  timer PIDTimer = timer();
+  double pwr = 0; 
+  /**********adjust pI and dI to tune*********/
+  float kP = 0.5;
+  float kI = 0;
+  float kD = 0;
+
+  //set turn target
+  int turnTarget = angle;
+
+  while(true){
+
+    //calculate the P
+    P = turnTarget - Gyro.rotation(deg);
+    std::cout << P << " :Turn P" << std::endl;
+    //calculate the I
+    I += P * 10;
+
+    //Calculate the D
+    D = (P - lastError)/10;
+    lastError = P;
+    //calculate drive power
+    float total = P*kP + I*kI + D*kD;
+
+    //setting power value
+    if(fabs(total) > maxPwr){
+      pwr = maxPwr;
+    }else if(fabs(total) < 4){
+      pwr = 4;
+    }else{
+      pwr = fabs(total);
+    }
+    //check if turning left
+    if(P < 0 ^ status == linkType::worker){
+      pwr = -1*pwr;
+    }
+    //set motors to spin
+    spin(-pwr,pwr);  
+    
+    //check if we have reached our target
+    if(fabs(P) > 1){
+      PIDTimer.clear(); 
+    }
+    if(PIDTimer.time(msec) > 50)
+    {
+      break;
+    }
+    
+    wait(10,msec);
+  }
+
+//stop the drive
+stop(brake);
+
+}
+
+void drive::turnToRing(double maxPwr){
+ //set and initalize variables
+  float lastError = 0;
+  float P = 0;
+  float I = 0;
+  float D = 0;
+
+  timer PIDTimer = timer();
+  double pwr = 0; 
+  /**********adjust pI and dI to tune*********/
+  float kP = 0.1;
+  float kI = 0;
+  float kD = 0;
+
+  //set turn target
+  //int turnTarget = angle;
+
+  while(true){
+    AIVision1.takeSnapshot(aivision::ALL_OBJECTS);
+    //calculate the P
+    P = 160 - AIVision1.largestObject.centerX;
+    std::cout << P << " :Turn P" << std::endl;
+    //calculate the I
+    I += P * 10;
+
+    //Calculate the D
+    D = (P - lastError)/10;
+    lastError = P;
+    //calculate drive power
+    float total = P*kP + I*kI + D*kD;
+
+    //setting power value
+    if(fabs(total) > maxPwr){
+      pwr = maxPwr;
+    }else if(fabs(total) < 4){
+      pwr = 4;
+    }else{
+      pwr = fabs(total);
+    }
+    //check if turning left
+    if(P < 0){
+      pwr = -1*pwr;
+    }
+    //set motors to spin
+    spin(-pwr,pwr);  
+    
+    //check if we have reached our target
+    if(fabs(P) > 10){
+      PIDTimer.clear(); 
+    }
+    if(PIDTimer.time(msec) > 50)
+    {
+      break;
+    }
+    
+    wait(10,msec);
+  }
+  stop(brake);
 }
 
 
@@ -409,6 +561,77 @@ void drive::moveToPoint(double x, double y, double angle, double maxPwr){
 stop(brake);
 }
 
+//Function that uses a PID loop to move the robot either forward or backward at a specified maximum power
+void drive::strafe(double dist, double maxPwr){
+
+     //set and initalize variables
+  float lastError = 0;
+  float P = 0;
+  float I = 0;
+  float D = 0;
+
+  timer PIDTimer = timer();
+  double currentDist = 0;
+  double pwr = 0; 
+  /**********adjust pI and dI to tune*********/
+  float kP = 5;
+  float kI = 0;
+  float kD = 0;
+
+  //set turn target
+  int driveTarget = dist;
+
+  LDrive.resetPosition();
+  RDrive.resetPosition();
+
+  while(true){
+
+    currentDist = ((LDrive.position(rev) + RDrive.position(rev))/2) * (1.58 * pi);
+
+    //calculate the P
+    P = driveTarget - currentDist;
+    std::cout << P << " :Move P" << std::endl;
+    //calculate the I
+    I += P * 10;
+
+    //Calculate the D
+    D = (P - lastError)/10;
+    lastError = P;
+    //calculate drive power
+    float total = P*kP + I*kI + D*kD;
+
+    //setting power value
+    if(fabs(total) > maxPwr){
+      pwr = maxPwr;
+    }else if(fabs(total) < 4){
+      pwr = 4;
+    }else{
+      pwr = fabs(total);
+    }
+    //check if turning left
+    if(P < 0){
+      pwr = -1*pwr;
+    }
+    //set motors to spin
+    spin(pwr,-pwr,pwr,-pwr);  
+    
+    //check if we have reached our target
+    if(fabs(P) > 0.5){
+      PIDTimer.clear(); 
+    }
+    if(PIDTimer.time(msec) > 50)
+    {
+      break;
+    }
+    
+    wait(10,msec);
+  }
+
+//stop the drive
+stop(brake);
+
+}
+
 
 
 
@@ -417,43 +640,53 @@ stop(brake);
 int Drive(){
 
     base.setJoystickCurve(10);
-    if(status == linkType::worker){
-      driverCount = 0;
-    }
+    
 
     while(true){
-        if(Controller1.ButtonX.pressing() && status == linkType::manager){
-          control = !control;
-          waitUntil(!Controller1.ButtonX.pressing());
-        }
+        
 
-        if((control == true && status == linkType::worker) || status == linkType::manager){
+        
         lForward = base.joystickCurve(Controller1.Axis3.position());
         rForward = base.joystickCurve(Controller1.Axis2.position());
         lTurn = base.joystickCurve(Controller1.Axis4.position());
         rTurn = base.joystickCurve(Controller1.Axis1.position());
-        }
         
-        if((control == true && status == linkType::manager) || status == linkType::worker){
-        if(driverCount == 0){
-            base.spin((lForward + lTurn) * 0.9, (lForward - lTurn)*0.9);
+        if(status == linkType::worker){
+          if(driverCount == 0){
+              base.spin((lForward + lTurn + rTurn), (lForward + lTurn - rTurn),(lForward - lTurn + rTurn) ,(lForward - lTurn - rTurn) );
+          }
+          else if(driverCount == 1)
+          {
+            base.spin((lForward + lTurn), (lForward - lTurn),(rForward + lTurn) ,(rForward - lTurn) );
+          }
+          else if(driverCount == 2){
+            base.spin((rForward + rTurn + lTurn), (rForward + rTurn - lTurn),(rForward - rTurn + lTurn) ,(rForward - rTurn - lTurn) );
+          }
+          else if(driverCount == 3){
+            base.spin((lForward + rTurn + lTurn), (lForward + rTurn - lTurn),(lForward - rTurn + lTurn) ,(lForward - rTurn - lTurn) );
+          }
+          else if(driverCount == 4){
+            base.spin((rForward + lTurn + rTurn), (rForward + lTurn - rTurn),(rForward - lTurn + rTurn) ,(rForward - lTurn - rTurn) );
+          }
         }
-        else if(driverCount == 1){
-            if(status == linkType::manager){
+        else{
+          if(driverCount == 0)
+          {
+            base.spin(lForward + lTurn,lForward - lTurn);
+          }
+          else if(driverCount == 1)
+          {
             base.spin(lForward,rForward);
-            }
-            else{
-            base.spin(rForward,lForward);
-            }
-        }
-        else if(driverCount == 2){
-            base.spin(-rForward, -lForward);
-        }
-        else if(driverCount == 3){
-            base.spin(lForward + rTurn*0.5, lForward - rTurn*0.4);
-        }
-        else if(driverCount == 4){
-            base.spin(rForward + lTurn, rForward - lTurn);
+          }
+          else if(driverCount == 2){
+              base.spin(rForward + rTurn,rForward - rTurn);
+          }
+          else if(driverCount == 3){
+              base.spin(lForward + rTurn, lForward - rTurn);
+          }
+          else if(driverCount == 4){
+              base.spin(rForward + lTurn, rForward - lTurn);
+          }
         }
         }
       
@@ -461,4 +694,3 @@ int Drive(){
 
         wait(10,msec);
     }
-}

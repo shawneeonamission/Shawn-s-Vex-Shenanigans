@@ -26,13 +26,18 @@ void ringBar::stop(brakeType type){
 
 void ringBar::lift(double angle){
     spin(100);
-    waitUntil(chainRot.position(deg) > angle);
+    if(chainRot.installed()){
+    waitUntil(chainRot.position(deg) > angle || Controller1.ButtonB.pressing());
+    }
+    else{
+        waitUntil(chainBar.position(deg) > angle * 5 || Controller1.ButtonB.pressing());
+    }
     stop(hold);
 }
+
 // New function to lift the chain bar using an instance
 int liftTaskFunction(void* param) {
-    double* myParam = static_cast<double*>(param);
-    double angle = *myParam;
+    double angle = *(double*)param;
     // Call the lift function on the ringBar instance
     chain.lift(angle);
     return 0; // End of task
@@ -42,36 +47,90 @@ void ringBar::startLift(double angle) {
     task liftTask(liftTaskFunction, &angle); // Start the task
 }
 
+void ringBar::lower(double angle){
+    spin(-100);
+    if(chainRot.installed()){
+    waitUntil(chainRot.position(deg) < angle || Controller1.ButtonB.pressing());
+    }
+    else{
+        waitUntil(chainBar.position(deg) < angle * 5 || Controller1.ButtonB.pressing());
+    }
+    stop(hold);
+}
+
 
 int chainState = 0;
 
 
 int chainBarControl(){
     chainRot.resetPosition();
+    chainBar.resetPosition();
+    if(!chainRot.installed()){
+        chain.lift(45);
+        chainState = 1;
+    }
     while(true){
-        
-            if(Controller1.ButtonR1.pressing() && status == linkType::manager){
+
+        if(status == linkType::manager){
+            if(Controller1.ButtonR1.pressing()){
                 chain.lift(95);
-                hang.open();
+                intakeLift.open();
                 waitUntil(!(Controller1.ButtonR1.pressing()));
                 
             }
-            else if(Controller1.ButtonR2.pressing() && status == linkType::manager){
+            else if(Controller1.ButtonR2.pressing()){
                 chain.spin(-50);
-                hang.close();
+                intakeLift.close();
                 waitUntil(!(Controller1.ButtonR2.pressing()));
                 chain.stop(coast);
                 
             }
+        }
+        else if(status == linkType::worker){
+            if(Controller1.ButtonR1.pressing() && chainState < 2){
+                chain.lift(95);
+                intakeLift.open();
+                chainState = 2;
+                waitUntil(!(Controller1.ButtonR1.pressing()));
+                
+            }
+            else if(Controller1.ButtonR1.pressing() && chainState == 2){
+                chain.lift(180);
+                intakeLift.open();
+                chainState = 3;
+                waitUntil(!(Controller1.ButtonR1.pressing()));
+                
+            }
+            else if(Controller1.ButtonR1.pressing() && chainState == 3){
+                chain.lift(215);
+                intakeLift.open();
+                chainState = 4;
+                waitUntil(!(Controller1.ButtonR1.pressing()));
+                
+            }
+            if(Controller1.ButtonR2.pressing() && chainState > 1){
+                chain.lower(45);
+                intakeLift.close();
+                chainState = 1;
+                waitUntil(!(Controller1.ButtonR2.pressing()));
+               
+                
+            }
+            else if(Controller1.ButtonR2.pressing() && chainState == 1){
+                chain.lower(15);
+                chainState = 0;
+                waitUntil(!(Controller1.ButtonR2.pressing()));
+            }
+        }
        
         
         //Shift Key
         while(Controller1.ButtonB.pressing()){
-        if(Controller1.ButtonL1.pressing()){
+        if(Controller1.ButtonR1.pressing()){
             chain.spin(50);
             waitUntil(!Controller1.ButtonL1.pressing());
         }
-        else if(Controller1.ButtonL2.pressing()){
+        else if(Controller1.ButtonR2.pressing()){
             chain.spin(-50);
             waitUntil(!Controller1.ButtonL2.pressing());
         }

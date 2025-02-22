@@ -6,6 +6,7 @@ extern int intoggle;
 extern int chainBarControl();
 extern int inSped;
 extern int outSped;
+extern int chainState;
 
 //define a namespace
 namespace S{
@@ -21,6 +22,7 @@ namespace S{
       void stop(brakeType type);
       void lift(double angle);
       void startLift(double angle);
+      void lower(double angle);
   };
 
 }
