@@ -565,7 +565,7 @@ double approx_length = (Distance(p0x,p0y,x,y) + (Distance(p0x,p0y,p1x,p1y) + Dis
     if(P < 0){
       pwr = -1*pwr;
     }
-    t = (finalPosX - StartX)/x;
+    t = ((finalPosX - StartX)/x) + 10;
     std::cout << "Drive T: " << t << std::endl;
     mx = pow(1-t,3) * p0x + c*pow(1-t,2)*t*p1x + c*(1-t)*pow(t,2)*p2x + pow(t,3)*x;
     my = pow(1-t,3) * p0y + c*pow(1-t,2)*t*p1y + c*(1-t)*pow(t,2)*p2y + pow(t,3)*y; 

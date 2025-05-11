@@ -3,32 +3,31 @@
 #include <iostream>
 #include "rgbLED.h"
 
-void gyroCalibrate()
-{
-Gyro.calibrate();
-Brain.Screen.setFillColor(black);
-Brain.Screen.setPenColor(red);
-Brain.Screen.drawRectangle(20,20,100,70);
-Brain.Screen.printAt(25,50,"Calibrate");
-Brain.Screen.printAt(25,70,"Inertial");
-lSideRail.clear(color(100,0,0));
-wait(10,msec);
-rSideRail.clear(color(100,0,0));
- 
+void gyroCalibrate(){
+    Gyro.calibrate();
+    Brain.Screen.setFillColor(black);
+    Brain.Screen.setPenColor(red);
+    Brain.Screen.drawRectangle(20,20,100,70);
+    Brain.Screen.printAt(25,50,"Calibrate");
+    Brain.Screen.printAt(25,70,"Inertial");
+    lSideRail.clear(color(100,0,0));
+    wait(10,msec);
+    rSideRail.clear(color(100,0,0));
 
-  while(Gyro.isCalibrating())
-  {
-    task::sleep(5);
-  }
-   Brain.Screen.setPenColor(green);
-          Brain.Screen.drawRectangle(20,20,100,70);
-Brain.Screen.printAt(25,70,"Calibrated");
-Brain.Screen.printAt(25,50,"Inertial");
-  Controller1.rumble(".");
-  Controller1.Screen.print("Calibrated");
-  lSideRail.clear(color(0,100,0));
-  wait(10,msec);
-  rSideRail.clear(color(0,100,0));
+
+    while(Gyro.isCalibrating())
+    {
+        wait(5,msec);
+    }
+    Brain.Screen.setPenColor(green);
+    Brain.Screen.drawRectangle(20,20,100,70);
+    Brain.Screen.printAt(25,70,"Calibrated");
+    Brain.Screen.printAt(25,50,"Inertial");
+    Controller1.rumble(".");
+    Controller1.Screen.print("Calibrated");
+    lSideRail.clear(color(0,100,0));
+    wait(10,msec);
+    rSideRail.clear(color(0,100,0));
 }
 
 //Count for side menus
@@ -204,29 +203,7 @@ Brain.Screen.printAt(210,210,"Rush");
         rSideRail.clear(color(0,0,100));
         rob = 2;
     }
-    if((Brain.Screen.xPosition() > 200) && (Brain.Screen.xPosition() < 295) && (Brain.Screen.yPosition() > 175) && (Brain.Screen.yPosition() < 225))
-    {
-        if(rush == 0){
-        Brain.Screen.setPenColor(white);
-        Brain.Screen.setFillColor(white);
-        Brain.Screen.drawRectangle(200,175,75,50);
-        Brain.Screen.setPenColor(black);
-        Brain.Screen.printAt(210,210,"Rush");
-        
-        rush = 1;
-        }
-        else if(rush == 1){
-            Brain.Screen.setPenColor(white);
-            Brain.Screen.setFillColor(black);
-            Brain.Screen.drawRectangle(200,175,75,50);
-            Brain.Screen.setPenColor(white);
-            Brain.Screen.printAt(210,210,"Rush");
-            
-            rush = 0;
-            }
-    }
-
-   
+    
   }
   return(0);
 }
@@ -258,15 +235,15 @@ int autonSelect() {
     autonModes[1] = "Main";
     autonModes[2] = "Testing";
     autonModes[3] = "Skills";
-    autonModes[4] = "HS 2 Ring";
-    autonModes[5] = "HS MultiRing";
-    autonModes[6] = "HS MulitStake";
+    autonModes[4] = "4";
+    autonModes[5] = "5";
+    autonModes[6] = "6";
 
     Bots[0] = "Big";
     Bots[1] = "Smol";
 
-    drivers[0] = "Default(Sean)";
-    drivers[1] = "driver1(Shawn)";
+    drivers[0] = "Default(Shawn)";
+    drivers[1] = "driver1(Sean)";
     drivers[2] = "driver2(Right Arcade)";
     drivers[3] = "driver3(Left Split)";
     drivers[4] = "driver4(Right Split)";
