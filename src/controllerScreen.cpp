@@ -14,7 +14,7 @@ int ControllerScreen()
     Controller1.Screen.setCursor(1,0);
     Controller1.Screen.print("Bat %d Air %.0f", Brain.Battery.capacity(pct),tankPressure);
     Controller1.Screen.setCursor(2,0);
-    Controller1.Screen.print("Chain %3.0f Belt %3.0f", chainBar.temperature(fahrenheit), ringBelt.temperature(fahrenheit));
+    Controller1.Screen.print("Placeholder");
     Controller1.Screen.setCursor(3,0);
     Controller1.Screen.print("L %3.0f R %3.0f", LDrive.temperature(fahrenheit), RDrive.temperature(fahrenheit));
     wait(20,msec);
