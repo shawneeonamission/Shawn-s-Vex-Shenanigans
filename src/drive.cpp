@@ -27,6 +27,10 @@ int bot = 0;
 
 bool control = true;
 
+double Distance(double p0x, double p0y, double p1x, double p1y){
+  return sqrt(pow(p1x-p0x,2) + pow(p1y-p0y,2));
+}
+
 void drive::setJoystickCurve(double curveValue){
     joystickCurveValue = curveValue;
 }
@@ -489,9 +493,23 @@ void drive::moveToPoint(double x, double y, double angle){
 
 //Function to have the robot move to the specified coordinates with a specified maximum power and end at the specified angle
 void drive::moveToPoint(double x, double y, double angle, double maxPwr){
-    if(fabs(finalAngle - angle) > 30){
+   /*  if(fabs(finalAngle - angle) > 30){
         turnToPoint(x,y,maxPwr);
-    }
+    } */
+double startAngle = finalAngle;
+double p0x = 0;
+double p0y = 0;
+double StartX = finalPosX;
+double StartY = finalPosY;
+double p1x = ((p0x + x)/2.0) * cos(startAngle * (pi/180)) + p0x;
+double p1y = ((p0x + x)/2.0) * sin(startAngle * (pi/180.0)) + p0y;
+double p2x =((p0x + x)/2.0) * cos(angle * (pi/180) - pi) + x;
+double p2y = ((p0x + x)/2.0) * sin(angle * (pi/180) - pi) + y;
+double t = 0;
+double c = 3;
+double mx = pow(1-t,3) * p0x + c*pow(1-t,2)*t*p1x + c*(1-t)*pow(t,2)*p2x + pow(t,3)*x;
+double my = pow(1-t,3) * p0y + c*pow(1-t,2)*t*p1y + c*(1-t)*pow(t,2)*p2y + pow(t,3)*y; 
+double approx_length = (Distance(p0x,p0y,x,y) + (Distance(p0x,p0y,p1x,p1y) + Distance(p1x,p1y,p2x,p2y) + Distance(p2x,p2y,x,y)))/2.0;
 
     double dist = sqrt(pow(finalPosX - x,2) + pow(finalPosY - y,2));
       //set and initalize variables
@@ -507,19 +525,24 @@ void drive::moveToPoint(double x, double y, double angle, double maxPwr){
   float kP = 5.5;
   float kI = 0;
   float kD = 0;
+  float kL = 2;
 
   //set turn target
-  int driveTarget = dist;
+  int driveTarget = approx_length;
 
   LDrive.resetPosition();
   RDrive.resetPosition();
+  double startDist = leftTrackingWheelCurrent;
+
+  double diff = 0;
 
   while(true){
 
-    currentDist = sqrt(pow(x,2) + pow(y,2));;
+    currentDist = leftTrackingWheelCurrent/360.0 * 2 * pi;
 
     //calculate the P
-    P = driveTarget - currentDist;
+    P = driveTarget + currentDist;
+    std::cout << "Drive P: " << P << std::endl;
 
     //calculate the I
     I += P * 10;
@@ -542,14 +565,31 @@ void drive::moveToPoint(double x, double y, double angle, double maxPwr){
     if(P < 0){
       pwr = -1*pwr;
     }
+    t = (finalPosX - StartX)/x;
+    std::cout << "Drive T: " << t << std::endl;
+    mx = pow(1-t,3) * p0x + c*pow(1-t,2)*t*p1x + c*(1-t)*pow(t,2)*p2x + pow(t,3)*x;
+    my = pow(1-t,3) * p0y + c*pow(1-t,2)*t*p1y + c*(1-t)*pow(t,2)*p2y + pow(t,3)*y; 
     //set motors to spin
-    spin(pwr,pwr);  
+    diff = finalPosY - (my + StartY);
+    if(diff < 0){
+      if(pwr - (diff * kL) < 5){
+        diff -= 5;
+      }
+    spin(pwr - (diff * kL),pwr);  
+    }else if(diff > 0){
+      if(pwr - (diff * kL) < 5){
+        diff -= 5;
+      }
+    spin(pwr,pwr - (diff * kL));  
+    }else{
+      spin(pwr,pwr);
+    }
     
     //check if we have reached our target
     if(fabs(P) > 0.5){
       PIDTimer.clear(); 
     }
-    if(PIDTimer.time(msec) > 50)
+    if(fabs(P) < 1)
     {
       break;
     }
@@ -613,7 +653,7 @@ void drive::strafe(double dist, double maxPwr){
       pwr = -1*pwr;
     }
     //set motors to spin
-    spin(pwr,-pwr,pwr,-pwr);  
+    spin(pwr,-(pwr+10),pwr,-(pwr+10));  
     
     //check if we have reached our target
     if(fabs(P) > 0.5){
@@ -632,6 +672,76 @@ stop(brake);
 
 }
 
+//Function that uses a PID loop to move the robot either forward or backward at a specified maximum power
+void drive::strafeSkills(double dist, double maxPwr){
+
+  //set and initalize variables
+float lastError = 0;
+float P = 0;
+float I = 0;
+float D = 0;
+
+timer PIDTimer = timer();
+double currentDist = 0;
+double pwr = 0; 
+/**********adjust pI and dI to tune*********/
+float kP = 5;
+float kI = 0;
+float kD = 0;
+
+//set turn target
+int driveTarget = dist;
+
+LDrive.resetPosition();
+RDrive.resetPosition();
+
+while(true){
+
+ currentDist = ((LDrive.position(rev) + RDrive.position(rev))/2) * (1.58 * pi);
+
+ //calculate the P
+ P = driveTarget - currentDist;
+ std::cout << P << " :Move P" << std::endl;
+ //calculate the I
+ I += P * 10;
+
+ //Calculate the D
+ D = (P - lastError)/10;
+ lastError = P;
+ //calculate drive power
+ float total = P*kP + I*kI + D*kD;
+
+ //setting power value
+ if(fabs(total) > maxPwr){
+   pwr = maxPwr;
+ }else if(fabs(total) < 4){
+   pwr = 4;
+ }else{
+   pwr = fabs(total);
+ }
+ //check if turning left
+ if(P < 0){
+   pwr = -1*pwr;
+ }
+ //set motors to spin
+ spin(pwr,-pwr,pwr,-pwr);  
+ 
+ //check if we have reached our target
+ if(fabs(P) > 0.5){
+   PIDTimer.clear(); 
+ }
+ if(PIDTimer.time(msec) > 50)
+ {
+   break;
+ }
+ 
+ wait(10,msec);
+}
+
+//stop the drive
+stop(brake);
+
+}
 
 
 

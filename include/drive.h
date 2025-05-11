@@ -46,6 +46,7 @@ namespace S{
       void moveToPoint(double x, double y, double angle);
       void moveToPoint(double x, double y, double angle, double pwr);
       void strafe(double dist, double maxPwr);
+      void strafeSkills(double dist, double maxPwr);
       
        };
 

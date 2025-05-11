@@ -113,6 +113,8 @@ Brain.Screen.setPenColor(blue);
   Brain.Screen.drawRectangle(400,175,75,50);
   Brain.Screen.printAt(410,210,"Blue");
   Brain.Screen.setPenColor(white);
+  Brain.Screen.drawRectangle(200,175,75,50);
+Brain.Screen.printAt(210,210,"Rush");
   Brain.Screen.printAt(300,20,"count = %d", count);
   Brain.Screen.printAt(300,40,"Bot = %d", BotCount);
   Brain.Screen.printAt(300,60,"driver = %d", driverCount);
@@ -201,6 +203,27 @@ Brain.Screen.setPenColor(blue);
         wait(10,msec);
         rSideRail.clear(color(0,0,100));
         rob = 2;
+    }
+    if((Brain.Screen.xPosition() > 200) && (Brain.Screen.xPosition() < 295) && (Brain.Screen.yPosition() > 175) && (Brain.Screen.yPosition() < 225))
+    {
+        if(rush == 0){
+        Brain.Screen.setPenColor(white);
+        Brain.Screen.setFillColor(white);
+        Brain.Screen.drawRectangle(200,175,75,50);
+        Brain.Screen.setPenColor(black);
+        Brain.Screen.printAt(210,210,"Rush");
+        
+        rush = 1;
+        }
+        else if(rush == 1){
+            Brain.Screen.setPenColor(white);
+            Brain.Screen.setFillColor(black);
+            Brain.Screen.drawRectangle(200,175,75,50);
+            Brain.Screen.setPenColor(white);
+            Brain.Screen.printAt(210,210,"Rush");
+            
+            rush = 0;
+            }
     }
 
    

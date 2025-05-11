@@ -37,31 +37,48 @@ void hooks::stop(brakeType type){
     ringBelt.stop(type);
 }
 void hooks::loadThingy(){
-    load = 1;
-    while(intakeSens.value(range12bit) > 2500){
-        /*if(ringBelt.velocity(rpm) < 5){
-            belt.spin(-50);
-            wait(500,msec);
-            belt.spin(100);
-            wait(200,msec);
-        }*/
-        wait(5,msec);
-    }
-    load = 2;
-    wait(200,msec);
-    waitUntil(intakeSens.value(range12bit) > 2500);
-    load = 3;
+    if(chainRot.installed()){
+        load = 1;
+        while(intakeSens.value(range12bit) > 2500){
+            /*if(ringBelt.velocity(rpm) < 5){
+                belt.spin(-50);
+                wait(500,msec);
+                belt.spin(100);
+                wait(200,msec);
+            }*/
+            wait(5,msec);
+        }
+        load = 2;
+        wait(200,msec);
+        waitUntil(intakeSens.value(range12bit) > 2500);
+        load = 3;
 
-    belt.spin(50);
-    waitUntil(ringColor.isNearObject());
-    load = 4;
-    belt.spin(10);
-    waitUntil(!ringColor.isNearObject());
-    load = 5;
-    belt.spin(-25);
-    wait(1,sec);
-    belt.spin(100);
-    load = 0;
+        belt.spin(50);
+        waitUntil(ringColor.isNearObject());
+        load = 4;
+        belt.spin(10);
+        waitUntil(!ringColor.isNearObject());
+        load = 5;
+        belt.spin(-25);
+        wait(1,sec);
+        belt.spin(100);
+        load = 0;
+    }else{
+        load = 1;
+        chain.lower(15);
+        load = 2;
+        belt.spin(100);
+        waitUntil(ringBelt.velocity(rpm) < 5 || Controller1.ButtonB.pressing());
+        load = 3;
+        ringBelt.resetPosition();
+        belt.spin(-10);
+        waitUntil(ringBelt.position(deg) < -27);
+        load = 4;
+        belt.stop();
+        chain.lift(95);
+        load = 0;
+        chainState = 2;
+    }
 }
 
 int beltState = 0;
@@ -103,9 +120,12 @@ int ringBeltControl(){
         if(Controller1.ButtonLeft.pressing() && beltState == 1){
             belt.loadThingy();
         }
+        if(ringColor.isNearObject()){
+            std::cout << "Close: "<< ringColor.hue() << std::endl;
+            waitUntil(ringColor.hue() > 60 || ringColor.hue() < 50);
         //color sorting
-        /*if(ringColor.isNearObject() && (ringColor.hue() < 200 || ringColor.hue() > 300) && rob == 2 && beltState == 1){
-        wait(25,msec);
+        if((ringColor.hue() < 25 || ringColor.hue() > 300) && rob == 2 && beltState == 1){
+        std::cout << "Red: "<< ringColor.hue() << " , "<< rob << std::endl;
         belt.stop(coast);
         beltTimer.clear();
         wait(500,msec);
@@ -114,15 +134,16 @@ int ringBeltControl(){
 
         }
         //color sorting
-        if(ringColor.isNearObject() && (ringColor.hue() > 200 || ringColor.hue() < 300) && rob == 1 && beltState == 1)
+        if((ringColor.hue() > 200 && ringColor.hue() < 300) && rob == 1 && beltState == 1)
         {
-            wait(25,msec);
+        std::cout << "Blue: " << ringColor.hue() << " , "<< rob << std::endl;
         belt.stop(coast);
         beltTimer.clear();
         wait(500,msec);
         belt.spin(100);
         wait(200,msec);
-        }*/
+        }
+    }
         //Shift Key
         while(Controller1.ButtonB.pressing()){
         if(Controller1.ButtonL1.pressing()){

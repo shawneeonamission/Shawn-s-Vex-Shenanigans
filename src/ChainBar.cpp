@@ -34,6 +34,25 @@ void ringBar::lift(double angle){
     }
     stop(hold);
 }
+void ringBar::goTo(double angle){
+    if(chainRot.installed()){
+    
+    if(chainRot.position(deg) < angle){
+        lift(angle);
+    }else{
+        lower(angle);
+    }
+    }
+    else{
+        waitUntil(chainBar.position(deg) > angle * 5 || Controller1.ButtonB.pressing());
+        if(chainBar.position(deg) / 5.0 < angle){
+            lift(angle);
+        }else{
+            lower(angle);
+        }
+    }
+    stop(hold);
+}
 
 // New function to lift the chain bar using an instance
 int liftTaskFunction(void* param) {

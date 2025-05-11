@@ -21,6 +21,7 @@ namespace S{
       void stop();
       void stop(brakeType type);
       void lift(double angle);
+      void goTo(double angle);
       void startLift(double angle);
       void lower(double angle);
   };

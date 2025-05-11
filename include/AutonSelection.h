@@ -29,6 +29,8 @@ extern bool testing;
 
 extern short driverCount;
 
+extern int rush;
+
 
 //define a namespace
 namespace S{

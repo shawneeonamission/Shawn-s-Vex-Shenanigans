@@ -6,15 +6,11 @@ using namespace S;
 
 brain Brain;
 
-
 distance goalDie(PORT8);
 
-
-
 rotation leftTrackingWheel = rotation(PORT5);
-rotation perpendicularTrackingWheel = rotation(PORT6);
 
-motor chainBar = motor(PORT9,ratio36_1);
+rotation perpendicularTrackingWheel = rotation(PORT6);
 
 motor lRingBelt(PORT16,ratio18_1);
 motor rRingBelt(PORT15,ratio18_1,true);
@@ -23,10 +19,8 @@ motor_group ringBelt(rRingBelt,lRingBelt);
 
 optical ringColor(PORT2);
 
-
 rotation chainRot(PORT4);
-
-
+motor chainBar = motor(PORT9,chainRot.installed()? ratio36_1 : ratio18_1);
 
 pneumatics clamp(Brain.ThreeWirePort.A);
 pneumatics doink(Brain.ThreeWirePort.B);
