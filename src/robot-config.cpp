@@ -5,40 +5,46 @@ using namespace vex;
 using namespace S;
 
 brain Brain;
-controller Controller1 = controller(primary);
-controller Controller2 = controller(partner);
-motor RD1 = motor(PORT7,ratio6_1);
-motor RD2 = motor(PORT8,ratio6_1);
-motor RD3 = motor(PORT9,ratio6_1,true);
-motor_group RDrive(RD1,RD2,RD3);
-motor LD1 = motor(PORT1,ratio6_1,true);
-motor LD2 = motor(PORT2,ratio6_1,true);
-motor LD3 = motor(PORT3,ratio6_1);
-motor_group LDrive(LD1,LD2,LD3);
 
-distance stakeDie(PORT13);
-distance goalDie(PORT12);
+distance goalDie(PORT8);
 
-inertial Gyro = inertial(PORT19,left);
-rotation leftTrackingWheel = rotation(PORT11);
-rotation rightTrackingWheel = rotation(PORT12,true);
-rotation perpendicularTrackingWheel = rotation(PORT10);
+rotation leftTrackingWheel = rotation(PORT5);
 
-motor chainBar = motor(PORT5,ratio36_1,true);
-
-motor lLift = motor(PORT11,ratio36_1);
-motor rLift = motor(PORT20,ratio36_1,true);
-
-motor_group goalLift = motor_group(lLift,rLift);
-
-rotation chainRot(PORT7);
-
-pneumatics stake(Brain.ThreeWirePort.A);
-
+rotation perpendicularTrackingWheel = rotation(PORT6);
 
 analog_in airPressure(Brain.ThreeWirePort.E);
-
 RGB lSideRail(vex::triport(PORT22).F, 56 );
 RGB rSideRail(vex::triport(PORT22).G, 56 );
 
+linkType status = linkType::manager;//Dont forget this-------------------------------------------------------------------
+serial_link linkA(PORT3,"INTRT_In_Transit_Robotics",status);
 
+inertial Gyro = inertial(PORT7,left);
+
+controller Controller1 = controller(primary);
+controller Controller2 = controller(partner);
+motor RD1 = motor(PORT17,true);
+motor RD2 = motor(PORT18,true);
+motor RD3 = motor(PORT19,true);
+motor RD4 = motor(PORT20,true);
+motor_group RFDrive(RD1,RD3);
+motor_group RRDrive(RD2,RD4);
+motor_group RDrive(RD1,RD2,RD3,RD4);
+motor LD1 = motor(PORT11);
+motor LD2 = motor(PORT12);
+motor LD3 = motor(PORT13);
+motor LD4 = motor(PORT14);
+motor_group LFDrive(LD1,LD3);
+motor_group LRDrive(LD2,LD4);
+motor_group LDrive(LD1,LD2,LD3,LD4);
+
+// AI Classification Competition Element IDs
+enum gameElements {
+  mobileGoal,
+  redRing,
+  blueRing,
+};
+
+// AI Vision Color Descriptions
+// AI Vision Code Descriptions
+vex::aivision AIVision1(PORT1, aivision::ALL_AIOBJS);

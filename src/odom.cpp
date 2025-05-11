@@ -34,15 +34,15 @@ double inertialChange;
 double inertialCurrentRadians;
 double inertialChangeRadians;
 
-double leftTrackingWheelDiameter = 3.25;
+double leftTrackingWheelDiameter = 1.9;
 double leftTrackingWheelCurrent;
 double leftTrackingWheelPrevious;
 double leftTrackingWheelChange;
 double leftTrackingWheelChangeInches;
 double leftTrackingWheelTotalInches;
-double leftDistanceToCenter = 5.5;
+double leftDistanceToCenter = 1.9375;
 
-double rightTrackingWheelDiameter = 2.775;
+double rightTrackingWheelDiameter = 1.9;
 double rightTrackingWheelCurrent;
 double rightTrackingWheelPrevious;
 double rightTrackingWheelChange;
@@ -50,13 +50,13 @@ double rightTrackingWheelChangeInches;
 double rightTrackingWheelTotalInches;
 double rightDistanceToCenter = 5.5;
 
-double perpendicularTrackingWheelDiameter = 2.775;
+double perpendicularTrackingWheelDiameter = 1.9;
 double perpendicularTrackingWheelCurrent;
 double perpendicularTrackingWheelPrevious;
 double perpendicularTrackingWheelChange;
 double perpendicularTrackingWheelChangeInches;
 double perpendicularTrackingWheelTotalInches;
-double perpendicularDistanceToCenter = 5;
+double perpendicularDistanceToCenter = 1;
 
 double localHypotnuseLength;
 double localHypotnuseAngle;
@@ -81,7 +81,7 @@ double odom::angleToPoint(double x, double y){
 int odomCalculations(){
     //Infinte loop
     leftTrackingWheel.resetPosition();
-    rightTrackingWheel.resetPosition();
+    //rightTrackingWheel.resetPosition();
     perpendicularTrackingWheel.resetPosition();
     while(true){
         //line to be able to start and stop the odometry at will
@@ -95,8 +95,8 @@ int odomCalculations(){
 
             //Set Current 
             inertialCurrent = Gyro.rotation(deg);
-            leftTrackingWheelCurrent = (LDrive.position(rev)*3/5.0)* leftDistanceToCenter * pi;
-            rightTrackingWheelCurrent = (RDrive.position(rev)*3/5.0)* rightDistanceToCenter * pi;
+            leftTrackingWheelCurrent = (LDrive.position(rev)*3/5.0)* leftTrackingWheelDiameter * pi;
+            rightTrackingWheelCurrent = (RDrive.position(rev)*3/5.0)* rightTrackingWheelDiameter * pi;
 
 
 
@@ -112,7 +112,7 @@ int odomCalculations(){
             //Final Angle
             finalAngle += inertialChange;
 
-
+            
 
             if(finalAngle > 180)
             {
@@ -266,7 +266,7 @@ int odomCalculations(){
                     //Update Sensor Variables
         inertialCurrent = Gyro.rotation(deg);
         inertialCurrentRadians = inertialCurrent * (pi / 180);
-        rightTrackingWheelCurrent = rightTrackingWheel.position(deg);
+        //rightTrackingWheelCurrent = rightTrackingWheel.position(deg);
         perpendicularTrackingWheelCurrent = perpendicularTrackingWheel.position(deg);
 
         //Calculate Change in sensor values

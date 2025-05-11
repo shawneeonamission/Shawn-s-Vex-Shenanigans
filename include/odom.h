@@ -6,6 +6,7 @@ extern double pi;
 extern double finalPosX;
 extern double finalPosY;
 extern double finalAngle;
+extern double leftTrackingWheelCurrent;
 extern int odomCalculations();
 
 namespace S{
